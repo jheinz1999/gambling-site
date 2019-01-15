@@ -6,6 +6,9 @@ function solver(hand) {
   if (checkStraightFlush(hand))
     return 8;
 
+  if (checkFourKind(hand))
+    return 7;
+
   return 0;
 
 }
@@ -109,6 +112,29 @@ function checkFlush(hand) {
     counts[suits[i]]++;
 
     if (counts[suits[i]] === 5)
+      return true;
+
+  }
+
+  return false;
+
+}
+
+function checkFourKind(hand) {
+
+  const cards = hand.map(card => card.value);
+
+  const cardCounts = {};
+
+  for (let i = 0; i < cards.length; i++) {
+
+    if (cardCounts[cards[i]])
+      cardCounts[cards[i]]++;
+
+    else
+      cardCounts[cards[i]] = 1;
+
+    if (cardCounts[cards[i]] === 4)
       return true;
 
   }
