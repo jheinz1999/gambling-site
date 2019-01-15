@@ -1,13 +1,16 @@
 const express = require('express');
-const Card = require('./cards/Card');
+const Deck = require('./cards/Deck');
 
 const server = express();
 
 server.use(express.json());
 
-const AceofSpades = new Card('A', 'S');
+const firstDeck = new Deck();
 
-console.log(AceofSpades.card, AceofSpades.suit);
+const hand1 = firstDeck.draw();
+const hand5 = firstDeck.draw(5);
+
+console.log(hand1, hand5, firstDeck.getLength());
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => console.log(`Server live on port ${port}`));
