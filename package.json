@@ -1,0 +1,28 @@
+{
+  "name": "gambling-site-backend",
+  "version": "1.0.0",
+  "description": "Backend for open source gambling site",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jheinz1999/gambling-site.git"
+  },
+  "author": "Jonathan Heinz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jheinz1999/gambling-site/issues"
+  },
+  "homepage": "https://github.com/jheinz1999/gambling-site#readme",
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "socket.io": "^2.2.0"
+  }
+}
