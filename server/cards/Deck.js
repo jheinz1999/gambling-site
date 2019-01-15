@@ -15,36 +15,6 @@ class Deck {
 
     for (let i = 1; i <= 13; i++) {
 
-      let card;
-
-      switch (i) {
-
-        case 1:
-
-          card = 'A';
-          break;
-
-        case 11:
-
-          card = 'J';
-          break;
-
-        case 12:
-
-          card = 'Q';
-          break;
-
-        case 13:
-
-          card = 'K';
-          break;
-
-        default:
-
-          card = '' + i;
-
-      }
-
       for (let j = 0; j < 4; j++) {
 
         let suit;
@@ -77,7 +47,7 @@ class Deck {
 
         }
 
-        this.deck.push(new Card(card, suit));
+        this.deck.push(new Card(i, suit));
 
       }
 

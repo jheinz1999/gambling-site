@@ -9,14 +9,28 @@ function solver(hand) {
 
 function checkRoyalFlush(hand) {
 
-  const straight = ['10', 'J', 'Q', 'K', 'A'];
-
   const suits = hand.map(card => card.suit);
-  const cards = hand.map(card => card.card);
+  const cards = hand.map(card => card.value);
 
-  const firstSuit = suits[0];
+  if (cards.includes(1)) {
 
-  return suits.every(suit => suit === firstSuit) && cards.every(card => straight.indexOf(card) !== -1);
+    const suit = suits[cards.indexOf(1)];
+
+    for (let i = 10; i <= 13; i++) {
+
+      if (cards.indexOf[i] !== -1 && suits[cards.indexOf(i)] === suit)
+        continue;
+
+      else
+        return false;
+
+    }
+
+    return true;
+
+  }
+
+  return false;
 
 }
 
