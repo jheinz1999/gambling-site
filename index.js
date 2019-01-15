@@ -9,11 +9,13 @@ server.use(express.json());
 
 const hand1 = [];
 
-hand1.push(new Card('10', 'H'));
-hand1.push(new Card('Q', 'H'));
-hand1.push(new Card('J', 'H'));
-hand1.push(new Card('A', 'H'));
-hand1.push(new Card('4', 'H'));
+hand1.push(new Card(10, 'H'));
+hand1.push(new Card(12, 'H'));
+hand1.push(new Card(11, 'H'));
+hand1.push(new Card(1, 'H'));
+hand1.push(new Card(13, 'H'));
+hand1.push(new Card(3, 'C'));
+hand1.push(new Card(1, 'S'));
 
 console.log(solver(hand1));
 
