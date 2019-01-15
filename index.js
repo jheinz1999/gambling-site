@@ -1,16 +1,21 @@
 const express = require('express');
 const Deck = require('./cards/Deck');
+const Card = require('./cards/Card');
+const solver = require('./games/poker/solver');
 
 const server = express();
 
 server.use(express.json());
 
-const firstDeck = new Deck();
+const hand1 = [];
 
-const hand1 = firstDeck.draw();
-const hand5 = firstDeck.draw(5);
+hand1.push(new Card('10', 'H'));
+hand1.push(new Card('Q', 'H'));
+hand1.push(new Card('J', 'H'));
+hand1.push(new Card('A', 'H'));
+hand1.push(new Card('4', 'H'));
 
-console.log(hand1, hand5, firstDeck.getLength());
+console.log(solver(hand1));
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => console.log(`Server live on port ${port}`));
