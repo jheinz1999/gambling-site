@@ -12,6 +12,15 @@ function solver(hand) {
   if (checkFullHouse(hand))
     return 6;
 
+  if (checkFlush(hand))
+    return 5;
+
+  if (checkStraight(hand))
+    return 4;
+
+  if (checkThreeKind(hand))
+    return 3;
+
   return 0;
 
 }
@@ -146,6 +155,29 @@ function checkFourKind(hand) {
 
 }
 
+function checkThreeKind(hand) {
+
+  const cards = hand.map(card => card.value);
+
+  const cardCounts = {};
+
+  for (let i = 0; i < cards.length; i++) {
+
+    if (cardCounts[cards[i]])
+      cardCounts[cards[i]]++;
+
+    else
+      cardCounts[cards[i]] = 1;
+
+    if (cardCounts[cards[i]] === 3)
+      return true;
+
+  }
+
+  return false;
+
+}
+
 function checkFullHouse(hand) {
 
   const cards = hand.map(card => card.value);
@@ -163,10 +195,16 @@ function checkFullHouse(hand) {
       cardCounts[cards[i]] = 1;
 
     if (cardCounts[cards[i]] === 2 && cards[i] !== threes)
-      twos = cardCounts[cards[i]];
+      twos = cards[i];
 
-    if (cardCounts[cards[i]] === 3)
-      threes = cardCounts[cards[i]];
+    if (cardCounts[cards[i]] === 3) {
+
+      threes = cards[i];
+
+      if (twos === threes)
+        twos = null;
+
+    }
 
   }
 
