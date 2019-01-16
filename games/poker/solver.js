@@ -21,6 +21,9 @@ function solver(hand) {
   if (checkThreeKind(hand))
     return 3;
 
+  if (checkTwoPair(hand))
+    return 2;
+
   return 0;
 
 }
@@ -209,6 +212,33 @@ function checkFullHouse(hand) {
   }
 
   return twos && threes;
+
+}
+
+function checkTwoPair(hand) {
+
+  const cards = hand.map(card => card.value);
+
+  const cardCounts = {};
+  let pairCount = 0;
+
+  for (let i = 0; i < cards.length; i++) {
+
+    if (cardCounts[cards[i]])
+      cardCounts[cards[i]]++;
+
+    else
+      cardCounts[cards[i]] = 1;
+
+    if (cardCounts[cards[i]] === 2)
+      pairCount++;
+
+    if (pairCount === 2)
+      return true;
+
+  }
+
+  return false;
 
 }
 

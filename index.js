@@ -15,7 +15,7 @@ hand1.push(new Card(8, 'D'));
 hand1.push(new Card(7, 'C'));
 hand1.push(new Card(8, 'S'));
 hand1.push(new Card(1, 'H'));
-hand1.push(new Card(8, 'H'));
+hand1.push(new Card(5, 'H'));
 
 console.log(solver(hand1));
 
