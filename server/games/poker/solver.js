@@ -211,6 +211,7 @@ function checkThreeKind(hand) {
   const cards = hand.map(card => card.value);
 
   const cardCounts = {};
+  const threeValues = [];
 
   for (let i = 0; i < cards.length; i++) {
 
@@ -221,12 +222,27 @@ function checkThreeKind(hand) {
       cardCounts[cards[i]] = 1;
 
     if (cardCounts[cards[i]] === 3)
-      return {
+      threeValues.push(cards[i]);
 
-        rank: 3,
-        value: cards[i]
+  }
 
-      };
+  if (threeValues.length) {
+
+    let highest = 0;
+
+    for (let i = 0; i < threeValues.length; i++) {
+
+      if (threeValues[i] > highest)
+        highest = threeValues[i];
+
+    }
+
+    return {
+
+      rank: 3,
+      value: highest
+
+    };
 
   }
 
