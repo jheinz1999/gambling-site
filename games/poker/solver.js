@@ -1,53 +1,17 @@
 function solver(hand) {
 
-  let result;
+  const funcs = [checkRoyalFlush, checkStraightFlush, checkFourKind,
+    checkFullHouse, checkFlush, checkStraight, checkThreeKind,
+    checkTwoPair, checkPair, findHighCard]
 
-  result = checkRoyalFlush(hand);
+  for (let i = 0; i < funcs.length; i++) {
 
-  if (result)
-    return result;
+    let result = funcs[i](hand);
 
-  result = checkStraightFlush(hand);
+    if (result)
+      return result;
 
-  if (result)
-    return result;
-
-  result = checkFourKind(hand);
-
-  if (result)
-    return result;
-
-  result = checkFullHouse(hand);
-
-  if (result)
-    return result;
-
-  result = checkFlush(hand);
-
-  if (result)
-    return result;
-
-  result = checkStraight(hand);
-
-  if (result)
-    return result;
-
-  result = checkThreeKind(hand);
-
-  if (result)
-    return result;
-
-  result = checkTwoPair(hand);
-
-  if (result)
-    return result;
-
-  result = checkPair(hand);
-
-  if (result)
-    return result;
-
-  return findHighCard(hand);
+  }
 
 }
 
