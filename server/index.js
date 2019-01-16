@@ -11,9 +11,9 @@ const hand1 = [];
 
 hand1.push(new Card(4, 'H'));
 hand1.push(new Card(5, 'H'));
-hand1.push(new Card(8, 'D'));
+hand1.push(new Card(4, 'D'));
 hand1.push(new Card(7, 'C'));
-hand1.push(new Card(3, 'S'));
+hand1.push(new Card(4, 'S'));
 hand1.push(new Card(1, 'H'));
 hand1.push(new Card(10, 'H'));
 
