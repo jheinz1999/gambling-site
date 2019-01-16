@@ -1,33 +1,53 @@
 function solver(hand) {
 
-  if (checkRoyalFlush(hand))
-    return 9;
+  let result;
 
-  if (checkStraightFlush(hand))
-    return 8;
+  result = checkRoyalFlush(hand);
 
-  if (checkFourKind(hand))
-    return 7;
+  if (result)
+    return result;
 
-  if (checkFullHouse(hand))
-    return 6;
+  result = checkStraightFlush(hand);
 
-  if (checkFlush(hand))
-    return 5;
+  if (result)
+    return result;
 
-  if (checkStraight(hand))
-    return 4;
+  result = checkFourKind(hand);
 
-  if (checkThreeKind(hand))
-    return 3;
+  if (result)
+    return result;
 
-  if (checkTwoPair(hand))
-    return 2;
+  result = checkFullHouse(hand);
 
-  if (checkPair(hand))
-    return 1;
+  if (result)
+    return result;
 
-  return 0;
+  result = checkFlush(hand);
+
+  if (result)
+    return result;
+
+  result = checkStraight(hand);
+
+  if (result)
+    return result;
+
+  result = checkThreeKind(hand);
+
+  if (result)
+    return result;
+
+  result = checkTwoPair(hand);
+
+  if (result)
+    return result;
+
+  result = checkPair(hand);
+
+  if (result)
+    return result;
+
+  return findHighCard(hand);
 
 }
 
@@ -46,31 +66,42 @@ function checkRoyalFlush(hand) {
         continue;
 
       else
-        return false;
+        return null;
 
     }
 
-    return true;
+    return {
+
+      rank: 9
+
+    };
 
   }
 
-  return false;
+  return null;
 
 }
 
 function checkStraightFlush(hand) {
 
-  if (checkStraight(hand)) {
+  if (checkFlush(hand)) {
 
-    return checkFlush(hand);
+    const straight = checkStraight(hand);
+
+    if (straight) {
+
+      return {
+
+        rank: 8,
+        value: straight.value
+
+      }
+
+    }
 
   }
 
-  else {
-
-    return false;
-
-  }
+  return null;
 
 }
 
@@ -89,7 +120,7 @@ function checkStraight(hand) {
     for (let i = startingIndex; i < startingIndex + 4; i++) {
 
       if (i === cards.length)
-        return false;
+        return null;
 
       if (cards[i] + 1 !== cards[i - 1]) {
 
@@ -107,8 +138,12 @@ function checkStraight(hand) {
 
   }
 
-  console.log('highest straight: starts w/ ', cards[startingIndex - 1]);
-  return true;
+  return {
+
+    rank: 4,
+    value: cards[startingIndex - 1]
+
+  };
 
 }
 
@@ -130,11 +165,16 @@ function checkFlush(hand) {
     counts[suits[i]]++;
 
     if (counts[suits[i]] === 5)
-      return true;
+      return {
+
+        rank: 5,
+        value: findHighCard(hand, suits[i]).value
+
+      };
 
   }
 
-  return false;
+  return null;
 
 }
 
@@ -153,11 +193,16 @@ function checkFourKind(hand) {
       cardCounts[cards[i]] = 1;
 
     if (cardCounts[cards[i]] === 4)
-      return true;
+      return {
+
+        rank: 7,
+        value: cards[i]
+
+      };
 
   }
 
-  return false;
+  return null;
 
 }
 
@@ -176,11 +221,16 @@ function checkThreeKind(hand) {
       cardCounts[cards[i]] = 1;
 
     if (cardCounts[cards[i]] === 3)
-      return true;
+      return {
+
+        rank: 3,
+        value: cards[i]
+
+      };
 
   }
 
-  return false;
+  return null;
 
 }
 
@@ -214,7 +264,19 @@ function checkFullHouse(hand) {
 
   }
 
-  return twos && threes;
+  if (twos && threes) {
+
+    return {
+
+      rank: 6,
+      value: threes,
+      value2: twos
+
+    }
+
+  }
+
+  return null;
 
 }
 
@@ -223,7 +285,7 @@ function checkTwoPair(hand) {
   const cards = hand.map(card => card.value);
 
   const cardCounts = {};
-  let pairCount = 0;
+  let pairs = [];
 
   for (let i = 0; i < cards.length; i++) {
 
@@ -234,14 +296,20 @@ function checkTwoPair(hand) {
       cardCounts[cards[i]] = 1;
 
     if (cardCounts[cards[i]] === 2)
-      pairCount++;
+      pairs.push[cards[i]];
 
-    if (pairCount === 2)
-      return true;
+    if (pairs.length === 2)
+      return {
+
+        rank: 2,
+        value: pairs[0],
+        value2: pairs[1]
+
+      };
 
   }
 
-  return false;
+  return null;
 
 }
 
@@ -261,11 +329,42 @@ function checkPair(hand) {
       cardCounts[cards[i]] = 1;
 
     if (cardCounts[cards[i]] === 2)
-      return true;
+      return {
+
+        rank: 1,
+        value: cards[i]
+
+      };
 
   }
 
-  return false;
+  return null;
+
+}
+
+function findHighCard(hand, suit = null) {
+
+  let highest = 0;
+
+  for (let i = 0; i < hand.length; i++) {
+
+    if (hand[i].value > highest) {
+
+      if (suit && hand[i].suit !== suit)
+        continue;
+
+      highest = hand[i].value;
+
+    }
+
+  }
+
+  return {
+
+    rank: 0,
+    value: highest
+
+  }
 
 }
 
