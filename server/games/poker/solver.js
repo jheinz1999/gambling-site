@@ -24,6 +24,9 @@ function solver(hand) {
   if (checkTwoPair(hand))
     return 2;
 
+  if (checkPair(hand))
+    return 1;
+
   return 0;
 
 }
@@ -234,6 +237,30 @@ function checkTwoPair(hand) {
       pairCount++;
 
     if (pairCount === 2)
+      return true;
+
+  }
+
+  return false;
+
+}
+
+function checkPair(hand) {
+
+  const cards = hand.map(card => card.value);
+
+  const cardCounts = {};
+  let pairCount = 0;
+
+  for (let i = 0; i < cards.length; i++) {
+
+    if (cardCounts[cards[i]])
+      cardCounts[cards[i]]++;
+
+    else
+      cardCounts[cards[i]] = 1;
+
+    if (cardCounts[cards[i]] === 2)
       return true;
 
   }
