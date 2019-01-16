@@ -10,12 +10,12 @@ server.use(express.json());
 const hand1 = [];
 
 hand1.push(new Card(4, 'H'));
-hand1.push(new Card(8, 'C'));
+hand1.push(new Card(5, 'H'));
 hand1.push(new Card(8, 'D'));
-hand1.push(new Card(9, 'C'));
-hand1.push(new Card(4, 'S'));
+hand1.push(new Card(7, 'C'));
+hand1.push(new Card(8, 'S'));
+hand1.push(new Card(1, 'H'));
 hand1.push(new Card(8, 'H'));
-hand1.push(new Card(2, 'H'));
 
 console.log(solver(hand1));
 
