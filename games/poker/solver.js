@@ -22,23 +22,44 @@ function checkRoyalFlush(hand) {
 
   if (cards.includes(1)) {
 
-    const suit = suits[cards.indexOf(1)];
+    const bigSuits = [];
 
-    for (let i = 10; i <= 13; i++) {
+    for (let i = 0; i < cards.length; i++) {
 
-      if (cards.indexOf[i] !== -1 && suits[cards.indexOf(i)] === suit)
-        continue;
-
-      else
-        return null;
+      if (cards[i] === 1)
+        bigSuits.push(suits[i]);
 
     }
 
-    return {
+    for (let i = 0; i < bigSuits.length; i++) {
 
-      rank: 9
+      let found = true;
 
-    };
+      for (let j = 10; j <= 13; j++) {
+
+        if (cards.indexOf[j] !== -1 && bigSuits[i] === suits[cards.indexOf(j)])
+          continue;
+
+        else {
+
+          found = false;
+          break;
+
+        }
+
+      }
+
+      if (found) {
+
+        return {
+
+          rank: 9
+
+        };
+
+      }
+
+    }
 
   }
 
@@ -72,7 +93,7 @@ function checkStraightFlush(hand) {
 function checkStraight(hand) {
 
   const cards = hand.map(card => card.value);
-  cards.sort().reverse();
+  cards.sort((a, b) => a - b).reverse();
 
   let checking = true;
   let startingIndex = 1;
@@ -85,6 +106,12 @@ function checkStraight(hand) {
 
       if (i === cards.length)
         return null;
+
+      if (cards[i] === cards[i - 1]) {
+
+        continue;
+
+      }
 
       if (cards[i] + 1 !== cards[i - 1]) {
 
@@ -275,17 +302,28 @@ function checkTwoPair(hand) {
     else
       cardCounts[cards[i]] = 1;
 
-    if (cardCounts[cards[i]] === 2)
-      pairs.push[cards[i]];
+  }
 
-    if (pairs.length === 2)
-      return {
+  const counts = Object.entries(cardCounts);
 
-        rank: 2,
-        value: pairs[0],
-        value2: pairs[1]
+  console.log(counts);
 
-      };
+  for (let i = 0; i < counts.length; i++) {
+
+    if (counts[i][1] === 2)
+      pairs.push(Number(counts[i][0]));
+
+  }
+
+  if (pairs.length >= 2) {
+
+    return {
+
+      rank: 2,
+      value: pairs[0],
+      value2: pairs[1]
+
+    }
 
   }
 
@@ -298,7 +336,6 @@ function checkPair(hand) {
   const cards = hand.map(card => card.value);
 
   const cardCounts = {};
-  let pairCount = 0;
 
   for (let i = 0; i < cards.length; i++) {
 
