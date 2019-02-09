@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,9 @@
   },
   "homepage": "https://github.com/jheinz1999/gambling-site#readme",
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "jest": "^24.1.0",
+    "nodemon": "^1.18.9",
+    "supertest": "^3.4.2"
   },
   "dependencies": {
     "express": "^4.16.4",

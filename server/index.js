@@ -7,17 +7,17 @@ const server = express();
 
 server.use(express.json());
 
-const hand1 = [];
+const deck = new Deck();
 
-hand1.push(new Card(4, 'H'));
-hand1.push(new Card(5, 'H'));
-hand1.push(new Card(4, 'D'));
-hand1.push(new Card(5, 'C'));
-hand1.push(new Card(4, 'S'));
-hand1.push(new Card(5, 'H'));
-hand1.push(new Card(10, 'H'));
+const hand = deck.draw(5);
 
-console.log(solver(hand1));
+for (let i = 0; i < 5; i++) {
+
+  console.log(hand[i].card, hand[i].suit);
+
+}
+
+console.log(solver(hand));
 
 const port = process.env.PORT || 5000;
-server.listen(port, () => console.log(`Server live on port ${port}`));
+server.listen(port, () => console.log(`Server live on port ${port}`)); 
