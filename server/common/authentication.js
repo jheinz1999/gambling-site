@@ -6,7 +6,10 @@ const generateToken = user => {
 
   const payload = {
 
-    subject: user.id
+    subject: user.id,
+    id: user.id,
+    username: user.username,
+    cash: user.cash
 
   }
 
@@ -64,6 +67,7 @@ const authenticate = (req, res, next) => {
 module.exports = {
 
   generateToken,
-  authenticate
+  authenticate,
+  jwtKey
 
 }
