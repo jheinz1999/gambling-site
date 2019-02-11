@@ -5,6 +5,7 @@ exports.up = function(knex, Promise) {
     tbl.increments();
 
     tbl.string('username').notNullable().unique();
+    tbl.string('email').notNullable().unique();
     tbl.string('password').notNullable();
     tbl.integer('cash').notNullable();
 
