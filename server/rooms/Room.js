@@ -30,6 +30,12 @@ class Room {
 
   }
 
+  isFull() {
+
+    return this.users.length === 5;
+
+  }
+
 }
 
 module.exports = Room;
