@@ -15,12 +15,12 @@ export default function Navbar() {
 
       </div>
 
-      <div className='middle-group'>
+      {localStorage.user && (<div className='middle-group'>
 
         <NavLink exact to='/poker' activeClassName='active'>Play Poker</NavLink>
         <NavLink exact to='/blackjack' activeClassName='active'>Play Blackjack</NavLink>
 
-      </div>
+      </div>)}
 
       <div className='right-group'>
 
