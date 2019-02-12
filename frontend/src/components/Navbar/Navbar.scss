@@ -1,0 +1,27 @@
+nav {
+
+  width: 100%;
+  display: flex;
+  padding: 20px 10px;
+  justify-content: space-between;
+  background-color: lightblue;
+
+  a {
+
+    margin: 0 15px;
+
+    &:hover {
+
+      color: blue;
+
+    }
+
+  }
+
+  .active {
+
+    font-weight: bold;
+
+  }
+
+}
