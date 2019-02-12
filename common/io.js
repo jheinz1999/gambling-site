@@ -31,30 +31,52 @@ function start() {
 
           socket.emit('loginSuccess');
 
-          socket.on('loginAck', data => {
+          socket.on('createRoom', room => {
 
-            socket.on('createRoom', room => {
+            const [createdRoom] = rooms.find(existingRoom => existingRoom.name === room);
 
-              if (rooms.indexOf(room) === -1) {
+            if (createdRoom) {
 
-                socket.emit('error', 'room exists!');
+              socket.emit('error', 'room exists!');
 
-              }
+            }
 
-              else {
+            else {
 
-                socket.join(room);
-                rooms.push(new PokerRoom(room, user));
+              socket.join(room);
+              rooms.push(new PokerRoom(room, user));
 
-              }
+            }
 
-            });
+          });
 
-            socket.on('joinRoom', room => {
+          socket.on('joinRoom', room => {
+
+            const [createdRoom] = rooms.find(existingRoom => existingRoom.name === room);
+
+            if (!createdRoom) {
+
+              socket.emit('error', 'Room does not exist!');
+
+            }
+
+            else if (createdRoom.isFull()) {
+
+              socket.emit('error', 'Room is full!');
+
+            }
+
+            else {
 
               socket.join(room);
 
-            });
+            }
+
+          });
+
+          socket.on('getRooms', () => {
+
+            socket.emit('roomList', rooms);
 
           });
 
