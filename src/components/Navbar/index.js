@@ -24,7 +24,8 @@ export default function Navbar() {
 
       <div className='right-group'>
 
-        <NavLink exact to='/login' activeClassName='active'>Sign Up/Log In</NavLink>
+        <NavLink exact to='/login' activeClassName='active'>Log In</NavLink>
+        <NavLink exact to='/signup' activeClassName='active'>Sign Up</NavLink>
 
       </div>
 
