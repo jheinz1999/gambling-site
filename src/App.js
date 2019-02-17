@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import PokerLobby from './components/PokerLobby';
 
 class App extends Component {
   render() {
@@ -25,6 +26,12 @@ class App extends Component {
           exact
           path='/signup'
           render={props => <Signup {...props} />}
+        />
+
+        <Route
+          exact
+          path='/poker'
+          render={props => <PokerLobby {...props} />}
         />
 
       </div>
