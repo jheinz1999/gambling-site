@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import config from '../../config';
 
-export default class Login extends React.Component {
+export default class Signup extends React.Component {
 
   constructor() {
 
@@ -13,7 +13,8 @@ export default class Login extends React.Component {
 
       username: '',
       password: '',
-      loginError: false
+      email: '',
+      error: null
 
     }
 
@@ -23,7 +24,7 @@ export default class Login extends React.Component {
 
     this.setState({
 
-      loginError: false,
+      error: null,
       [e.target.name]: e.target.value
 
     });
@@ -37,9 +38,9 @@ export default class Login extends React.Component {
 
   }
 
-  handleErr = res => {
+  handleErr = err => {
 
-    this.setState({loginError: true});
+    this.setState({error: err.response.message});
 
   }
 
@@ -47,7 +48,7 @@ export default class Login extends React.Component {
 
     e.preventDefault();
 
-    axios.post(`${config.SERVER_URL}/api/registration/login`, this.state)
+    axios.post(`${config.SERVER_URL}/api/registration/register`, this.state)
       .then(this.handleSuccess)
       .catch(this.handleErr);
 
@@ -60,11 +61,12 @@ export default class Login extends React.Component {
       <form onSubmit={this.handleSubmit}>
 
         <input type='text' name='username' value={this.state.username} onChange={this.handleChange} required />
+        <input type='email' name='email' value={this.state.email} onChange={this.handleChange} required />
         <input type='password' name='password' value={this.state.password} onChange={this.handleChange} required />
 
         <button>Log In</button>
 
-        {this.state.loginError && <p>Invalid credentials!</p>}
+        {this.state.error && <p>{this.state.error}</p>}
 
       </form>
 
