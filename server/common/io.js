@@ -1,88 +1,115 @@
 const jwt = require('jsonwebtoken');
-const server = require('../server');
-const io = require('socket.io')(server);
 
 const { jwtKey } = require('./authentication');
 
 const PokerRoom = require('../rooms/PokerRoom');
 const rooms = [];
 
-function start() {
+function checkToken(token) {
 
-  console.log('started?');
+  return new Promise(function(resolve, reject) {
+
+    jwt.verify(token, jwtKey, (err, user) => {
+
+      if (err)
+        resolve(null);
+
+      else
+        resolve(user);
+
+    });
+
+  });
+
+}
+
+async function start(io) {
 
   io.on('connection', socket => {
 
-    console.log('connected?');
-
     socket.emit('loginReq');
 
-    socket.on('loginRes', data => {
+    socket.on('loginRes', async token => {
 
-      jwt.verify(token, jwtKey, (err, user) => {
+      const user = await checkToken(token);
 
-        if (err) {
+      if (!user) {
 
-          socket.emit('loginFailure');
+        socket.emit('loginFailure');
+        return;
 
-        }
+      }
 
-        else {
+      socket.emit('loginSuccess');
 
-          socket.emit('loginSuccess');
+    });
 
-          socket.on('createRoom', room => {
+    socket.on('createRoom', async data => {
 
-            const [createdRoom] = rooms.find(existingRoom => existingRoom.name === room);
+      const { room, token } = data;
 
-            if (createdRoom) {
+      const user = await checkToken(token);
 
-              socket.emit('error', 'room exists!');
+      if (!user) {
 
-            }
+        socket.emit('loginFailure');
+        return;
 
-            else {
+      }
 
-              socket.join(room);
-              rooms.push(new PokerRoom(room, user));
+      const [createdRoom] = rooms.find(existingRoom => existingRoom.name === room);
 
-            }
+      if (createdRoom) {
 
-          });
+        socket.emit('error', 'room exists!');
 
-          socket.on('joinRoom', room => {
+      }
 
-            const [createdRoom] = rooms.find(existingRoom => existingRoom.name === room);
+      else {
 
-            if (!createdRoom) {
+        socket.join(room);
+        rooms.push(new PokerRoom(room, user));
 
-              socket.emit('error', 'Room does not exist!');
+      }
 
-            }
+    });
 
-            else if (createdRoom.isFull()) {
+    socket.on('joinRoom', async room => {
 
-              socket.emit('error', 'Room is full!');
+      const user = await checkToken(token);
 
-            }
+      if (!user) {
 
-            else {
+        socket.emit('loginFailure');
+        return;
 
-              socket.join(room);
+      }
 
-            }
+      const [createdRoom] = rooms.find(existingRoom => existingRoom.name === room);
 
-          });
+      if (!createdRoom) {
 
-          socket.on('getRooms', () => {
+        socket.emit('error', 'Room does not exist!');
 
-            socket.emit('roomList', rooms);
+      }
 
-          });
+      else if (createdRoom.isFull()) {
 
-        }
+        socket.emit('error', 'Room is full!');
 
-      });
+      }
+
+      else {
+
+        socket.join(room);
+
+      }
+
+    });
+
+    socket.on('getRooms', () => {
+
+      socket.emit('roomList', rooms);
 
     });
 
@@ -92,7 +119,6 @@ function start() {
 
 module.exports = {
 
-  start,
-  io
+  start
 
 }

@@ -32,7 +32,7 @@ export default class Login extends React.Component {
 
   handleSuccess = res => {
 
-    localStorage.user = res.data;
+    localStorage.user = JSON.stringify(res.data);
     this.props.history.push('/dashboard');
 
   }
