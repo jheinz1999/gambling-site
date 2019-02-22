@@ -46,6 +46,8 @@ async function start(io) {
 
     socket.on('createRoom', async data => {
 
+      console.log('room req');
+
       const { room, token } = data;
 
       const user = await checkToken(token);
@@ -57,7 +59,7 @@ async function start(io) {
 
       }
 
-      const [createdRoom] = rooms.find(existingRoom => existingRoom.name === room);
+      const createdRoom = rooms.find(existingRoom => existingRoom.name === room);
 
       if (createdRoom) {
 
@@ -67,8 +69,11 @@ async function start(io) {
 
       else {
 
+        socket.emit('createRoomSuccess', room);
         socket.join(room);
+        io.to(room).emit('newUser', user.username);
         rooms.push(new PokerRoom(room, user));
+        console.log('success');
 
       }
 
