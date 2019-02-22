@@ -90,7 +90,11 @@ async function start(io) {
 
     });
 
-    socket.on('joinRoom', async room => {
+    socket.on('joinRoom', async data => {
+
+      const { room, token } = data;
+
+      console.log('token', token)
 
       const user = await checkToken(token);
 
@@ -118,7 +122,9 @@ async function start(io) {
       else {
 
         socket.join(room);
+        createdRoom.addUser(user);
         currentRoom = room;
+        socket.emit('joinSuccess');
 
       }
 
@@ -137,15 +143,19 @@ async function start(io) {
       if (currentRoom) {
 
         const room = rooms.find(existingRoom => existingRoom.name === currentRoom);
-        const length = room.removeUser(user);
-        console.log(length);
 
-        if (length === 0) {
+        if (room && user) {
 
-          const index = rooms.map(room => room.name).indexOf(room.name);
-          console.log(`${currentRoom} has no more users`);
-          rooms.splice(index, 1);
-          socket.broadcast.emit('roomList', rooms);
+          const length = room.removeUser(user);
+
+          if (length === 0) {
+
+            const index = rooms.map(room => room.name).indexOf(room.name);
+            console.log(`${currentRoom} has no more users`);
+            rooms.splice(index, 1);
+            socket.broadcast.emit('roomList', rooms);
+
+          }
 
         }
 
