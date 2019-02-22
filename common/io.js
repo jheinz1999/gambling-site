@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 const { jwtKey } = require('./authentication');
-
+const { setIO } = require('./globals');
 const PokerRoom = require('../rooms/PokerRoom');
+
 const rooms = [];
 
 function checkToken(token) {
@@ -25,22 +26,31 @@ function checkToken(token) {
 
 async function start(io) {
 
+  setIO(io);
+
   io.on('connection', socket => {
+
+    let user = null;
+    let currentRoom = null;
 
     socket.emit('loginReq');
 
     socket.on('loginRes', async token => {
 
-      const user = await checkToken(token);
+      console.log('trying');
+
+      user = await checkToken(token);
 
       if (!user) {
 
         socket.emit('loginFailure');
+        console.log('fail');
         return;
 
       }
 
       socket.emit('loginSuccess');
+      console.log('success');
 
     });
 
@@ -71,9 +81,10 @@ async function start(io) {
 
         socket.emit('createRoomSuccess', room);
         socket.join(room);
+        currentRoom = room;
         io.to(room).emit('newUser', user.username);
         rooms.push(new PokerRoom(room, user));
-        console.log('success');
+        socket.broadcast.emit('roomList', rooms);
 
       }
 
@@ -90,7 +101,7 @@ async function start(io) {
 
       }
 
-      const [createdRoom] = rooms.find(existingRoom => existingRoom.name === room);
+      const createdRoom = rooms.find(existingRoom => existingRoom.name === room);
 
       if (!createdRoom) {
 
@@ -107,6 +118,7 @@ async function start(io) {
       else {
 
         socket.join(room);
+        currentRoom = room;
 
       }
 
@@ -115,6 +127,29 @@ async function start(io) {
     socket.on('getRooms', () => {
 
       socket.emit('roomList', rooms);
+
+    });
+
+    socket.on('disconnect', () => {
+
+      console.log('disconnect', user, currentRoom);
+
+      if (currentRoom) {
+
+        const room = rooms.find(existingRoom => existingRoom.name === currentRoom);
+        const length = room.removeUser(user);
+        console.log(length);
+
+        if (length === 0) {
+
+          const index = rooms.map(room => room.name).indexOf(room.name);
+          console.log(`${currentRoom} has no more users`);
+          rooms.splice(index, 1);
+          socket.broadcast.emit('roomList', rooms);
+
+        }
+
+      }
 
     });
 
