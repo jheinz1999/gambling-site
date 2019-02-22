@@ -1,9 +1,9 @@
 import React from 'react';
-import openSocket from 'socket.io-client';
+import { connect } from 'react-redux';
 
-import config from '../../config';
+import CreateRoomForm from '../CreateRoomForm';
 
-export default class PokerLobby extends React.Component {
+class PokerLobby extends React.Component {
 
   constructor() {
 
@@ -11,9 +11,9 @@ export default class PokerLobby extends React.Component {
 
     this.state = {
 
-      socket: null,
       verified: false,
-      user: null
+      user: null,
+      rooms: null
 
     }
 
@@ -30,7 +30,6 @@ export default class PokerLobby extends React.Component {
     else {
 
       this.setState({
-        socket: openSocket(config.SERVER_URL),
         user: JSON.parse(localStorage.user)
       }, this.setupSocket);
 
@@ -40,8 +39,10 @@ export default class PokerLobby extends React.Component {
 
   setupSocket = () => {
 
-    const { socket, user } = this.state;
-    const { history } = this.props;
+    console.log(this.props);
+
+    const { user } = this.state;
+    const { history, socket } = this.props;
 
     socket.on('loginReq', () => {
 
@@ -58,7 +59,27 @@ export default class PokerLobby extends React.Component {
 
         this.setState({verified: true});
 
+        socket.emit('getRooms');
+
+        socket.on('roomList', rooms => {
+
+          this.setState({rooms});
+
+        });
+
       });
+
+    });
+
+    socket.on('error', data => {
+
+      console.error(data);
+
+    });
+
+    socket.on('createRoomSuccess', room => {
+
+      this.props.history.push(`/poker/room/${room}`)
 
     });
 
@@ -66,9 +87,17 @@ export default class PokerLobby extends React.Component {
 
   render() {
 
-    if (!this.state.verified) {
+    const { verified, rooms } = this.state;
+
+    if (!verified) {
 
       return <h1>Logging in...</h1>
+
+    }
+
+    if (!rooms) {
+
+      return <h1>Fetching rooms...</h1>
 
     }
 
@@ -78,6 +107,10 @@ export default class PokerLobby extends React.Component {
 
         <h1>Lobby</h1>
 
+        <CreateRoomForm />
+
+        {rooms.map(room => <p>{room.name}</p>)}
+
       </>
 
     )
@@ -85,3 +118,15 @@ export default class PokerLobby extends React.Component {
   }
 
 }
+
+const stateToProps = state => {
+
+  return {
+
+    socket: state.socket
+
+  }
+
+}
+
+export default connect(stateToProps, null)(PokerLobby);
