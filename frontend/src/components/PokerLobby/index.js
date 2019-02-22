@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import CreateRoomForm from '../CreateRoomForm';
+import RoomPreview from '../RoomPreview';
 
 class PokerLobby extends React.Component {
 
@@ -104,7 +105,7 @@ class PokerLobby extends React.Component {
 
         <CreateRoomForm />
 
-        {rooms.map(room => <p>{room.name}</p>)}
+        {rooms.map(room => <RoomPreview {...room} />)}
 
       </>
 

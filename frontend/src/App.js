@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import PokerLobby from './components/PokerLobby';
+import PokerWaitingRoom from './components/PokerWaitingRoom';
 
 class App extends Component {
   render() {
@@ -32,6 +33,12 @@ class App extends Component {
           exact
           path='/poker'
           render={props => <PokerLobby {...props} />}
+        />
+
+        <Route
+          exact
+          path='/poker/room/:name'
+          render={props => <PokerWaitingRoom {...props} />}
         />
 
       </div>
