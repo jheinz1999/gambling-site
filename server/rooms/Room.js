@@ -1,11 +1,11 @@
-const { io } = require('../common/io');
+const { getIO } = require('../common/globals');
 
 class Room {
 
   constructor(name, leader) {
 
     this.name = name;
-    this.users = [];
+    this.users = [leader];
     this.leaderID = leader.id;
 
   }
@@ -13,18 +13,22 @@ class Room {
   addUser(user) {
 
     this.users.push(user);
-    io.to(this.name).emit('newUser', user.username);
+    getIO().to(this.name).emit('newUser', user.username);
 
   }
 
   removeUser(user) {
 
-    const index = this.users.indexOf(user);
+    const index = this.users.map(user => user.username).indexOf(user.username);
 
     if (index !== -1) {
 
       const [loggedOff] = this.users.splice(index, 1);
-      io.to(this.name).emit('userLoggedOff', loggedOff);
+      getIO().to(this.name).emit('userLoggedOff', loggedOff);
+
+      console.log('user logged off');
+
+      return this.users.length;
 
     }
 
