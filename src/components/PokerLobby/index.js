@@ -39,33 +39,28 @@ class PokerLobby extends React.Component {
 
   setupSocket = () => {
 
-    console.log(this.props);
-
     const { user } = this.state;
     const { history, socket } = this.props;
 
-    socket.on('loginReq', () => {
+    socket.emit('loginRes', user.token);
 
-      socket.emit('loginRes', user.token);
+    socket.on('loginFailure', () => {
 
-      socket.on('loginFailure', () => {
+      console.log('FAILED');
+      history.push('/login');
 
-        console.log('FAILED');
-        history.push('/login');
+    });
 
-      });
+    socket.on('loginSuccess', () => {
 
-      socket.on('loginSuccess', () => {
+      this.setState({verified: true});
+      console.log('success??');
 
-        this.setState({verified: true});
+      socket.emit('getRooms');
 
-        socket.emit('getRooms');
+      socket.on('roomList', rooms => {
 
-        socket.on('roomList', rooms => {
-
-          this.setState({rooms});
-
-        });
+        this.setState({rooms});
 
       });
 
