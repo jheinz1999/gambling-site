@@ -135,7 +135,7 @@ class PokerWaitingRoom extends React.Component {
           user={this.state.user}
           leaderID={this.state.leaderID} />
 
-        <Messenger user={this.state.user.username} />
+        <Messenger username={this.state.user.username} />
 
       </div>
 

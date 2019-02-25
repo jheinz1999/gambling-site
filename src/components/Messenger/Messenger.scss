@@ -2,7 +2,29 @@
 
   background-color: white;
   border: 5px solid black;
+  padding: 20px;
   width: 500px;
   margin: auto;
+  position: relative;
+
+  .submit-form {
+
+    margin: auto;
+
+    input {
+
+      border: 1px solid black;
+
+    }
+
+  }
+
+  .messages {
+
+    height: 300px;
+    margin-bottom: 20px;
+    overflow-y: scroll;
+
+  }
 
 }
