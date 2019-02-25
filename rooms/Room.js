@@ -23,6 +23,8 @@ class Room {
 
   getClients() {
 
+    console.log('room', this.name);
+
     const inRoom = Object.keys(getIO().sockets.adapter.rooms[this.name].sockets);
 
     this.sockets = Object.entries(getIO().of('/').adapter.nsp.connected)
