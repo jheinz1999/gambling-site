@@ -1,0 +1,36 @@
+.create-form {
+
+  margin: 0 auto;
+  width: 300px;
+  text-align: center;
+
+  .elements {
+
+    display: inline-block;
+    margin: auto;
+
+    input {
+
+      padding: 10px;
+      border: 0px;
+
+    }
+
+    button {
+
+      padding: 10px;
+      border: 0px;
+      background-color: lightgreen;
+      cursor: pointer;
+
+      &:hover {
+
+        background-color: lighten(lightgreen, 5%);
+
+      }
+
+    }
+
+  }
+
+}

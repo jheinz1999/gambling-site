@@ -1,6 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Message from './Message';
+
+import './Messenger.scss';
+
 class Messenger extends React.Component {
 
   constructor() {
@@ -68,7 +72,7 @@ class Messenger extends React.Component {
 
       <div className='messenger'>
 
-        {this.state.messages.map(message => <p key={message.message}>{message.message}</p>)}
+        {this.state.messages.map(message => <Message message={message} />)}
 
         <form onSubmit={this.sendMsg}>
 

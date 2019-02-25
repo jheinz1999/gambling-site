@@ -1,0 +1,18 @@
+.room-preview {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 60%;
+  background-color: lightblue;
+  margin: 20px auto;
+  padding: 20px;
+  cursor: pointer;
+
+  &:hover {
+
+    background-color: lighten(lightblue, 2%);
+
+  }
+
+}

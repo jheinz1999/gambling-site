@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import './CreateForm.scss';
+
 class CreateRoomForm extends React.Component {
 
   constructor() {
@@ -45,10 +47,14 @@ class CreateRoomForm extends React.Component {
 
     return (
 
-      <form onSubmit={this.handleSubmit}>
+      <form className='create-form' onSubmit={this.handleSubmit}>
 
-        <input type='text' name='room' onChange={this.handleChange} placeholder='room' required />
-        <button>Create room</button>
+        <div className='elements'>
+
+          <input type='text' name='room' onChange={this.handleChange} placeholder='room' required />
+          <button>Create room</button>
+
+        </div>
 
       </form>
 
