@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import UsersList from '../UsersList';
 import Messenger from '../Messenger';
 
+import './PokerWaitingRoom.scss';
+
 class PokerWaitingRoom extends React.Component {
 
   constructor() {
@@ -18,7 +20,8 @@ class PokerWaitingRoom extends React.Component {
       user: null,
       joined: false,
       users: [],
-      nonexistent: false
+      nonexistent: false,
+      leaderID: null
 
     }
 
@@ -73,7 +76,7 @@ class PokerWaitingRoom extends React.Component {
 
       else {
 
-        this.setState({joined: true, users: room.users});
+        this.setState({joined: true, users: room.users, leaderID: room.leaderID});
 
       }
 
@@ -125,9 +128,12 @@ class PokerWaitingRoom extends React.Component {
 
       <div className='poker-waiting-room'>
 
+        <h1>{this.props.match.params.name}</h1>
+
         <UsersList
           users={this.state.users}
-          user={this.state.user} />
+          user={this.state.user}
+          leaderID={this.state.leaderID} />
 
         <Messenger user={this.state.user.username} />
 

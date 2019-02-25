@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import CreateRoomForm from '../CreateRoomForm';
 import RoomPreview from '../RoomPreview';
 
+import './PokerLobby.scss';
+
 class PokerLobby extends React.Component {
 
   constructor() {
@@ -107,7 +109,7 @@ class PokerLobby extends React.Component {
 
     return (
 
-      <>
+      <div className='poker-lobby'>
 
         <h1>Lobby</h1>
 
@@ -115,7 +117,7 @@ class PokerLobby extends React.Component {
 
         {rooms.map(room => <RoomPreview {...room} key={room.name} />)}
 
-      </>
+      </div>
 
     )
 

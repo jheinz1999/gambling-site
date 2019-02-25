@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import config from '../../config';
 
+import './Signup.scss';
+
 export default class Signup extends React.Component {
 
   constructor() {
@@ -61,13 +63,13 @@ export default class Signup extends React.Component {
 
     return (
 
-      <form onSubmit={this.handleSubmit}>
+      <form className='signup-form' onSubmit={this.handleSubmit}>
 
-        <input type='text' name='username' placeholder='username' value={this.state.username} onChange={this.handleChange} required />
-        <input type='email' name='email' placeholder='email' value={this.state.email} onChange={this.handleChange} required />
+        <input type='text' name='username' placeholder='username' value={this.state.username} onChange={this.handleChange} autoComplete='off' required />
+        <input type='email' name='email' placeholder='email' value={this.state.email} onChange={this.handleChange} autoComplete='off' required />
         <input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.handleChange} required />
 
-        <button>Log In</button>
+        <button>Sign Up</button>
 
         {this.state.error && <p>{this.state.error}</p>}
 

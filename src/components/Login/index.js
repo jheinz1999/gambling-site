@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import config from '../../config';
 
+import './Login.scss';
+
 export default class Login extends React.Component {
 
   constructor() {
@@ -57,10 +59,10 @@ export default class Login extends React.Component {
 
     return (
 
-      <form onSubmit={this.handleSubmit}>
+      <form className='login-form' onSubmit={this.handleSubmit}>
 
-        <input type='text' name='username' placeholder='username' value={this.state.username} onChange={this.handleChange} required />
-        <input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.handleChange} required />
+        <input type='text' name='username' placeholder='username' value={this.state.username} onChange={this.handleChange} autoComplete='off' required /> <br/>
+        <input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.handleChange} required /> <br/>
 
         <button>Log In</button>
 

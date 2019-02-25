@@ -2,6 +2,8 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import './preview.scss';
+
 function RoomPreview({name, users, leaderID, history, socket}) {
 
   const data = {
@@ -13,21 +15,20 @@ function RoomPreview({name, users, leaderID, history, socket}) {
 
   return (
 
-    <div className='room-preview'>
+    <div className='room-preview' onClick={() => {
+
+      socket.emit('joinRoom', data);
+
+      socket.on('joinSuccess', () => {
+
+        history.push(`/poker/room/${name}`)
+
+      });
+
+    }}>
 
       <h2>{name}</h2>
       <p>{users.length}/5 connected</p>
-      <button onClick={() => {
-
-        socket.emit('joinRoom', data);
-
-        socket.on('joinSuccess', () => {
-
-          history.push(`/poker/room/${name}`)
-
-        });
-
-      }}>Join Room</button>
 
     </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 import './Navbar.scss';
 
@@ -24,8 +24,14 @@ export default function Navbar() {
 
       <div className='right-group'>
 
-        <NavLink exact to='/login' activeClassName='active'>Log In</NavLink>
-        <NavLink exact to='/signup' activeClassName='active'>Sign Up</NavLink>
+        {localStorage.user
+        ?
+        <Link to="/" onClick={() => {
+          localStorage.clear();
+        }}>Log Out</Link>
+        :
+        <><NavLink exact to='/login' activeClassName='active'>Log In</NavLink>
+        <NavLink exact to='/signup' activeClassName='active'>Sign Up</NavLink></>}
 
       </div>
 
