@@ -18,6 +18,9 @@ export default class Signup extends React.Component {
 
     }
 
+
+          console.log(config.SERVER_URL);
+
   }
 
   handleChange = e => {
