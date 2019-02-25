@@ -42,7 +42,6 @@ class PokerGame extends React.Component {
     const { socket } = this.props;
 
     socket.emit('roomReq', this.props.match.params.name);
-    socket.emit('readyToStart', this.state.user.user_id);
 
     socket.on('room', room => {
 
@@ -55,6 +54,7 @@ class PokerGame extends React.Component {
       else {
 
         this.setState({joined: true, users: room.users});
+        socket.emit('readyToStart', this.state.user.user_id);
 
       }
 
@@ -64,7 +64,7 @@ class PokerGame extends React.Component {
 
       this.setState({allReady: true});
 
-    })
+    });
 
   }
 
