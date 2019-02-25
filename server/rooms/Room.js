@@ -33,6 +33,17 @@ class Room {
 
   }
 
+  clearIO() {
+
+    this.sockets.forEach(socket => {
+
+      socket.removeAllListeners('usersReq');
+      socket.removeAllListeners('sendMsg');
+
+    });
+
+  }
+
   listenIO() {
 
     this.getClients();
@@ -47,16 +58,11 @@ class Room {
 
       });
 
-      socket.on('left', username => {
-
-        const user = this.users.find(u => u.username === username);
-        removeUser(user);
-
-      });
-
       socket.on('sendMsg', data => {
 
-        emit('newMsg', data);
+        console.log('we gots a message', data);
+
+        this.emit('newMsg', data);
 
       });
 
@@ -67,7 +73,8 @@ class Room {
   addUser(user) {
 
     this.users.push(user);
-    this.getClients();
+    this.clearIO();
+    this.listenIO();
     this.emit('newUser', user.username);
     this.emit('users', this.users);
 
@@ -93,7 +100,8 @@ class Room {
 
       }
 
-      this.getClients();
+      this.clearIO();
+      this.listenIO();
 
       return this.users.length;
 

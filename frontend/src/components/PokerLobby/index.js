@@ -52,6 +52,8 @@ class PokerLobby extends React.Component {
     socket.emit('loginRes', user.token);
     socket.emit('getRooms');
 
+    console.log('emittted requests');
+
     socket.on('loginFailure', () => {
 
       console.log('FAILED');

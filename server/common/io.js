@@ -46,6 +46,27 @@ function sendRooms() {
 
 }
 
+function removeFromRoom(user, roomName) {
+
+  const room = rooms.find(existingRoom => existingRoom.name === roomName);
+
+  if (room && user) {
+
+    const length = room.removeUser(user);
+
+    if (length === 0) {
+
+      const index = rooms.map(room => room.name).indexOf(room.name);
+      console.log(`${roomName} has no more users`);
+      rooms.splice(index, 1);
+      sendToAll('roomList', sendRooms());
+
+    }
+
+  }
+
+}
+
 async function start(io) {
 
   setIO(io);
@@ -179,28 +200,22 @@ async function start(io) {
 
     });
 
+    socket.on('leftRoom', room => {
+
+      console.log('outie');
+
+      removeFromRoom(user, room);
+      currentRoom = null;
+
+    });
+
     socket.on('disconnect', () => {
 
       console.log('disconnect', user, currentRoom);
 
       if (currentRoom) {
 
-        const room = rooms.find(existingRoom => existingRoom.name === currentRoom);
-
-        if (room && user) {
-
-          const length = room.removeUser(user);
-
-          if (length === 0) {
-
-            const index = rooms.map(room => room.name).indexOf(room.name);
-            console.log(`${currentRoom} has no more users`);
-            rooms.splice(index, 1);
-            sendToAll('roomList', sendRooms());
-
-          }
-
-        }
+        removeFromRoom(user, currentRoom);
 
       }
 

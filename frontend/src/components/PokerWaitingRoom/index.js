@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import UsersList from '../UsersList';
+import Messenger from '../Messenger';
 
 class PokerWaitingRoom extends React.Component {
 
@@ -44,7 +45,7 @@ class PokerWaitingRoom extends React.Component {
 
   componentWillUnmount() {
 
-    this.props.socket.emit('left', this.props.user.username);
+    this.props.socket.emit('leftRoom', this.props.match.params.name);
     this.props.socket.off();
 
   }
@@ -114,6 +115,12 @@ class PokerWaitingRoom extends React.Component {
     if (!joined)
       return <h1>Joining room...</h1>
 
+    if (!this.state.user) {
+
+      return <h1>loggin in yo</h1>
+
+    }
+
     return (
 
       <div className='poker-waiting-room'>
@@ -121,6 +128,8 @@ class PokerWaitingRoom extends React.Component {
         <UsersList
           users={this.state.users}
           user={this.state.user} />
+
+        <Messenger user={this.state.user.username} />
 
       </div>
 
