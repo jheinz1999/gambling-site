@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const { jwtKey } = require('./authentication');
-const { setIO } = require('./globals');
+const { setIO, getIO } = require('./globals');
 const PokerRoom = require('../rooms/PokerRoom');
 
 const rooms = [];
@@ -20,6 +20,28 @@ function checkToken(token) {
 
     });
 
+  });
+
+}
+
+function sendToAll(message, data) {
+
+  Object.values(getIO().of('/').adapter.nsp.connected).forEach(socket => {
+
+    socket.emit(message, data);
+
+  });
+
+}
+
+function sendRooms() {
+
+  return rooms.map(room => {
+    return {
+      name: room.name,
+      users: room.users,
+      leaderID: room.leaderID
+    }
   });
 
 }
@@ -82,9 +104,8 @@ async function start(io) {
         socket.emit('createRoomSuccess', room);
         socket.join(room);
         currentRoom = room;
-        io.to(room).emit('newUser', user.username);
         rooms.push(new PokerRoom(room, user));
-        socket.broadcast.emit('roomList', rooms);
+        sendToAll('roomList', sendRooms());
 
       }
 
@@ -132,7 +153,29 @@ async function start(io) {
 
     socket.on('getRooms', () => {
 
-      socket.emit('roomList', rooms);
+      sendToAll('roomList', sendRooms());
+
+    });
+
+    socket.on('roomReq', name => {
+
+      const room = rooms.find(room => room.name === name);
+
+      if (!room) {
+
+        socket.emit('nonexistentRoom');
+
+      }
+
+      else {
+
+        socket.emit('room', {
+          name: room.name,
+          users: room.users,
+          leaderID: room.leaderID
+        });
+
+      }
 
     });
 
@@ -153,7 +196,7 @@ async function start(io) {
             const index = rooms.map(room => room.name).indexOf(room.name);
             console.log(`${currentRoom} has no more users`);
             rooms.splice(index, 1);
-            socket.broadcast.emit('roomList', rooms);
+            sendToAll('roomList', sendRooms());
 
           }
 

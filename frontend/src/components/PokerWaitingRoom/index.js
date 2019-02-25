@@ -16,7 +16,8 @@ class PokerWaitingRoom extends React.Component {
       chatLog: null,
       user: null,
       joined: false,
-      users: []
+      users: [],
+      nonexistent: false
 
     }
 
@@ -41,12 +42,41 @@ class PokerWaitingRoom extends React.Component {
 
   }
 
+  componentWillUnmount() {
+
+    this.props.socket.emit('left', this.props.user.username);
+    this.props.socket.off();
+
+  }
+
   setupSocket() {
 
     const { socket, history } = this.props;
     const { name } = this.state;
 
-    socket.emit('usersReq');
+    socket.emit('roomReq', this.props.match.params.name);
+
+    socket.on('nonexistentRoom', () => {
+
+      this.setState({nonexistent: true});
+
+    });
+
+    socket.on('room', room => {
+
+      if (!room.users.find(user => user.username === this.state.user.username)) {
+
+        console.error('you aint in this room foo');
+
+      }
+
+      else {
+
+        this.setState({joined: true, users: room.users});
+
+      }
+
+    });
 
     socket.on('loginFailure', () => {
 
@@ -63,7 +93,7 @@ class PokerWaitingRoom extends React.Component {
 
     socket.on('users', users => {
 
-      this.setState({users, joined: true});
+      this.setState({users});
 
       if (!users.find(user => user.username === this.state.user.username)) {
 

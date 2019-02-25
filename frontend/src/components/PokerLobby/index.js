@@ -38,12 +38,19 @@ class PokerLobby extends React.Component {
 
   }
 
+  componentWillUnmount() {
+
+    this.props.socket.off();
+
+  }
+
   setupSocket = () => {
 
     const { user } = this.state;
     const { history, socket } = this.props;
 
     socket.emit('loginRes', user.token);
+    socket.emit('getRooms');
 
     socket.on('loginFailure', () => {
 
@@ -55,15 +62,6 @@ class PokerLobby extends React.Component {
     socket.on('loginSuccess', () => {
 
       this.setState({verified: true});
-      console.log('success??');
-
-      socket.emit('getRooms');
-
-      socket.on('roomList', rooms => {
-
-        this.setState({rooms});
-
-      });
 
     });
 
@@ -79,6 +77,14 @@ class PokerLobby extends React.Component {
 
     });
 
+    socket.on('roomList', rooms => {
+
+      console.log('got it');
+
+      this.setState({rooms});
+
+    });
+
   }
 
   render() {
@@ -91,7 +97,7 @@ class PokerLobby extends React.Component {
 
     }
 
-    if (!rooms) {
+    if (rooms === null) {
 
       return <h1>Fetching rooms...</h1>
 
@@ -105,7 +111,7 @@ class PokerLobby extends React.Component {
 
         <CreateRoomForm />
 
-        {rooms.map(room => <RoomPreview {...room} />)}
+        {rooms.map(room => <RoomPreview {...room} key={room.name} />)}
 
       </>
 

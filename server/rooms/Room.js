@@ -21,19 +21,42 @@ class Room {
 
   }
 
+  getClients() {
+
+    const inRoom = Object.keys(getIO().sockets.adapter.rooms[this.name].sockets);
+
+    this.sockets = Object.entries(getIO().of('/').adapter.nsp.connected)
+      .filter(obj => inRoom.indexOf(obj[0]) !== -1)
+      .map(obj => obj[1]);
+
+    console.log(this.sockets.length);
+
+  }
+
   listenIO() {
 
-    console.log('LISTENING NIBBAS');
+    this.getClients();
 
-    const sockets = Object.values(getIO().of('/').adapter.nsp.connected);
-
-    sockets.forEach(socket => {
+    this.sockets.forEach(socket => {
 
       socket.on('usersReq', () => {
 
-        console.log('requested nibba');
+        console.log('requested homie');
 
         this.emit('users', this.users);
+
+      });
+
+      socket.on('left', username => {
+
+        const user = this.users.find(u => u.username === username);
+        removeUser(user);
+
+      });
+
+      socket.on('sendMsg', data => {
+
+        emit('newMsg', data);
 
       });
 
@@ -44,6 +67,7 @@ class Room {
   addUser(user) {
 
     this.users.push(user);
+    this.getClients();
     this.emit('newUser', user.username);
     this.emit('users', this.users);
 
@@ -68,6 +92,8 @@ class Room {
         this.emit('newLeader', this.users[0].username);
 
       }
+
+      this.getClients();
 
       return this.users.length;
 

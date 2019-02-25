@@ -8,7 +8,7 @@ export default function UsersList({users, user}) {
 
     <div className='users-list'>
 
-      {users.map(u => <p>{u.username}</p>)}
+      {users.map(u => <p key={u.username}>{u.username}</p>)}
 
     </div>
 
