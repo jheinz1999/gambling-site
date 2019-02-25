@@ -95,8 +95,10 @@ class Room {
 
           this.ready++;
 
+          console.log('ready', id, this.ready);
+
           if (this.ready === this.users.length)
-            socket.emit('allReady');
+            this.emit('allReady');
 
         }
 
