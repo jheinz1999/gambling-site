@@ -1,4 +1,4 @@
-const { getIO } = require('../common/globals');
+const { getIO, checkToken } = require('../common/globals');
 
 class Room {
 
@@ -10,6 +10,7 @@ class Room {
     this.users = [leader];
     this.sockets = [];
     this.leaderID = leader.id;
+    this.ready = 0;
 
     this.listenIO();
 
@@ -62,9 +63,42 @@ class Room {
 
       socket.on('sendMsg', data => {
 
-        console.log('we gots a message', data);
-
         this.emit('newMsg', data);
+
+      });
+
+      socket.on('startGame', async token => {
+
+        const user = await checkToken(token);
+
+        if (!user) {
+
+          socket.emit('error', 'you are not logged in');
+          return;
+
+        }
+
+        if (user.id !== this.leaderID) {
+
+          socket.emit('error', 'you are not the leader');
+          return;
+
+        }
+
+        this.emit('startGame');
+
+      });
+
+      socket.on('readyToStart', id => {
+
+        if (this.users.find(user => user.id === id)) {
+
+          this.ready++;
+
+          if (this.ready === this.users.length)
+            socket.emit('allReady');
+
+        }
 
       });
 

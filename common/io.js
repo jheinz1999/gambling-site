@@ -1,28 +1,7 @@
-const jwt = require('jsonwebtoken');
-
-const { jwtKey } = require('./authentication');
-const { setIO, getIO } = require('./globals');
+const { setIO, getIO, checkToken } = require('./globals');
 const PokerRoom = require('../rooms/PokerRoom');
 
 const rooms = [];
-
-function checkToken(token) {
-
-  return new Promise(function(resolve, reject) {
-
-    jwt.verify(token, jwtKey, (err, user) => {
-
-      if (err)
-        resolve(null);
-
-      else
-        resolve(user);
-
-    });
-
-  });
-
-}
 
 function sendToAll(message, data) {
 
