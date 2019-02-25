@@ -21,7 +21,8 @@ class PokerWaitingRoom extends React.Component {
       joined: false,
       users: [],
       nonexistent: false,
-      leaderID: null
+      leaderID: null,
+      startingGame: false
 
     }
 
@@ -48,7 +49,9 @@ class PokerWaitingRoom extends React.Component {
 
   componentWillUnmount() {
 
-    this.props.socket.emit('leftRoom', this.props.match.params.name);
+    if (!this.state.startingGame)
+      this.props.socket.emit('leftRoom', this.props.match.params.name);
+
     this.props.socket.off();
 
   }
@@ -109,6 +112,20 @@ class PokerWaitingRoom extends React.Component {
 
     socket.on('newUser', user => console.log('new user', user));
 
+    socket.on('startGame', () => {
+
+      this.setState({startingGame: true}, () => this.props.history.push(`${this.props.location.pathname}/play`));
+
+    });
+
+  }
+
+  startGame = () => {
+
+    const { socket } = this.props;
+
+    socket.emit('startGame', this.state.user.token);
+
   }
 
   render() {
@@ -124,6 +141,8 @@ class PokerWaitingRoom extends React.Component {
 
     }
 
+    console.log(this.state.leaderID);
+
     return (
 
       <div className='poker-waiting-room'>
@@ -136,6 +155,9 @@ class PokerWaitingRoom extends React.Component {
           leaderID={this.state.leaderID} />
 
         <Messenger username={this.state.user.username} />
+
+        {this.state.leaderID === this.state.user.user_id
+        && <button onClick={this.startGame}>Start Game</button>}
 
       </div>
 
