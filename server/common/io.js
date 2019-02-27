@@ -185,6 +185,8 @@ async function start(io) {
 
       removeFromRoom(user, room);
       currentRoom = null;
+      socket.removeAllListeners('usersReq');
+      socket.removeAllListeners('sendMsg');
 
     });
 
