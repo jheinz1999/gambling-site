@@ -115,6 +115,14 @@ class Room {
     this.listenIO();
     this.emit('newUser', user.username);
     this.emit('users', this.users);
+    this.emit('newMsg', {
+      user: '[server]',
+      message: 'a new challenger approaches'
+    });
+    this.emit('newMsg', {
+      user: '[server]',
+      message: `${user.username} has entered the game`
+    });
 
   }
 
@@ -125,7 +133,10 @@ class Room {
     if (index !== -1) {
 
       const [loggedOff] = this.users.splice(index, 1);
-      this.emit('userLoggedOff', loggedOff);
+      this.emit('newMsg', {
+        user: '[server]',
+        message: `${user.username} has rage quit`
+      });
       this.emit('users', this.users);
 
       console.log('user logged off');
@@ -134,7 +145,7 @@ class Room {
 
         this.users[0].isLeader = true;
         this.leaderID = this.users[0].id;
-        this.emit('newLeader', this.users[0].username);
+        this.emit('newLeader', this.users[0].user_id);
 
       }
 
