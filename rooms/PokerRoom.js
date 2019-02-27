@@ -8,6 +8,12 @@ class PokerRoom extends Room {
 
   }
 
+  startPlaying() {
+
+    super.startPlaying();
+
+  }
+
 }
 
 module.exports = PokerRoom;

@@ -19,7 +19,8 @@ function sendRooms() {
     return {
       name: room.name,
       users: room.users,
-      leaderID: room.leaderID
+      leaderID: room.leaderID,
+      playing: room.playing
     }
   });
 

@@ -11,9 +11,16 @@ class Room {
     this.sockets = [];
     this.leaderID = leader.id;
     this.ready = 0;
+    this.playing = false;
 
     this.clearIO();
     this.listenIO();
+
+  }
+
+  startPlaying() {
+
+    this.playing = true;
 
   }
 
@@ -101,8 +108,10 @@ class Room {
 
           console.log('ready', id, this.ready);
 
-          if (this.ready === this.users.length)
+          if (this.ready === this.users.length) {
             this.emit('allReady');
+            this.startPlaying();
+          }
 
         }
 
