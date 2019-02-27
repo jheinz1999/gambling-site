@@ -4,7 +4,7 @@ import './UsersList.scss';
 
 export default function UsersList({users, user, leaderID}) {
 
-  console.log(users.length);
+  console.log(leaderID);
 
   return (
 
@@ -19,7 +19,7 @@ export default function UsersList({users, user, leaderID}) {
         if (u.id === leaderID)
           text = '[leader] ' + text;
 
-        else if (u.id === user.id)
+        else if (u.id === user.user_id)
           text = '* ' + text;
 
         return <p key={id}>{text}</p>

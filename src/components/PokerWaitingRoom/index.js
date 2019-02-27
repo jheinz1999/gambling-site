@@ -110,7 +110,7 @@ class PokerWaitingRoom extends React.Component {
 
     });
 
-    socket.on('newUser', user => console.log('new user', user));
+    socket.on('newLeader', id => this.setState({leaderID: id}));
 
     socket.on('startGame', () => {
 
