@@ -12,6 +12,7 @@ class Room {
     this.leaderID = leader.id;
     this.ready = 0;
 
+    this.clearIO();
     this.listenIO();
 
   }
@@ -49,6 +50,7 @@ class Room {
 
   listenIO() {
 
+    this.clearIO();
     this.getClients();
 
     this.sockets.forEach(socket => {
@@ -62,6 +64,8 @@ class Room {
       });
 
       socket.on('sendMsg', data => {
+
+        console.log(this.sockets.length);
 
         this.emit('newMsg', data);
 
