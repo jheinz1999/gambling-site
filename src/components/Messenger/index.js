@@ -38,9 +38,11 @@ class Messenger extends React.Component {
 
     socket.on('newMsg', data => {
 
+      console.log('yeet');
+
       this.setState({messages: [...this.state.messages, data]}, () => {
-        const data = document.querySelector('.messages');
-        data.scrollTop = data.scrollHeight;
+        const msgs = document.querySelector('.messages');
+        msgs.scrollTop = data.scrollHeight;
       });
 
     });
@@ -56,6 +58,8 @@ class Messenger extends React.Component {
   }
 
   sendMsg = e => {
+
+    console.log('abc');
 
     e.preventDefault();
 
@@ -76,11 +80,11 @@ class Messenger extends React.Component {
 
         <div className='messages'>
 
-          {this.state.messages.map(message => <Message data={message} />)}
+          {this.state.messages.map((message, id) => <Message key={id} data={message} />)}
 
         </div>
 
-        <form  className='submit-form' onSubmit={this.sendMsg}>
+        <form className='submit-form' onSubmit={this.sendMsg}>
 
           <input type='text' name='message' placeholder='message' value={this.state.message} onChange={this.handleChange} autoComplete='off' />
           <button>Send</button>
