@@ -2,5 +2,15 @@
 
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
+
+  p:nth-child(2) {
+
+    width: 50%;
+    word-wrap: break-word;
+    text-align: left;
+    padding-right: 10px;
+
+  }
 
 }
