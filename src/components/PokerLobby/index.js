@@ -115,7 +115,7 @@ class PokerLobby extends React.Component {
 
         <CreateRoomForm />
 
-        {rooms.map(room => <RoomPreview {...room} key={room.name} />)}
+        {rooms.map((room, id) => !room.playing && <RoomPreview {...room} key={id} />)}
 
       </div>
 

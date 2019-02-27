@@ -11,7 +11,7 @@ export default function Message({data}) {
     <div className='message'>
 
       <p><strong>{user}</strong></p>
-      <p>{message}</p>
+      <p className={user === '[server]' && 'alert'}>{message}</p>
 
     </div>
 
