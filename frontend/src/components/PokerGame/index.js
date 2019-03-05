@@ -14,7 +14,8 @@ class PokerGame extends React.Component {
       joined: false,
       allReady: false,
       users: null,
-      user: null
+      user: null,
+      hand: null
 
     }
 
@@ -66,11 +67,17 @@ class PokerGame extends React.Component {
 
     });
 
+    socket.on('newHand', hand => {
+
+      this.setState({hand});
+
+    });
+
   }
 
   render() {
 
-    const { joined, allReady } = this.state;
+    const { joined, allReady, hand } = this.state;
 
     if (!joined)
       return <h1>Joining room...</h1>
@@ -78,11 +85,18 @@ class PokerGame extends React.Component {
     if (!allReady)
       return <h1>Waiting for players...</h1>
 
+    if (!hand)
+      return <h1>Dealing cards...</h1>
+
     return (
 
       <div className='poker-game'>
 
         <h1>poker</h1>
+
+        <h2>Your Hand</h2>
+
+        {hand.map(card => <p>{card.card} of {card.suit}</p>)}
 
       </div>
 

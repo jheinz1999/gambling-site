@@ -72,6 +72,10 @@ async function start(io) {
 
       }
 
+      // join room of user so server can have private messages to user
+      socket.join(user.username);
+      console.log('joined a room called', user.username);
+
       socket.emit('loginSuccess');
       console.log('success');
 
