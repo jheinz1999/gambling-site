@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import CreateRoomForm from '../CreateRoomForm';
 import RoomPreview from '../RoomPreview';
 
+import { updateUser } from '../../redux/actions';
+
 import './PokerLobby.scss';
 
 class PokerLobby extends React.Component {
@@ -89,6 +91,15 @@ class PokerLobby extends React.Component {
 
     });
 
+    socket.on('cashChange', cash => {
+
+      const user = Object.assign({}, this.props.user);
+      user.cash = cash;
+
+      this.props.updateUser(user);
+
+    });
+
   }
 
   render() {
@@ -129,10 +140,11 @@ const stateToProps = state => {
 
   return {
 
-    socket: state.socket
+    socket: state.socket,
+    user: state.user
 
   }
 
 }
 
-export default connect(stateToProps, null)(PokerLobby);
+export default connect(stateToProps, { updateUser })(PokerLobby);
