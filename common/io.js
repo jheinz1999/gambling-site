@@ -1,5 +1,6 @@
 const { setIO, getIO, checkToken } = require('./globals');
 const PokerRoom = require('../rooms/PokerRoom');
+const db = require('../data/db');
 
 const rooms = [];
 
@@ -20,13 +21,14 @@ function sendRooms() {
       name: room.name,
       users: room.users,
       leaderID: room.leaderID,
-      playing: room.playing
+      playing: room.playing,
+      buyIn: room.buyIn
     }
   });
 
 }
 
-function removeFromRoom(user, roomName) {
+async function removeFromRoom(user, roomName) {
 
   const room = rooms.find(existingRoom => existingRoom.name === roomName);
 
@@ -40,6 +42,12 @@ function removeFromRoom(user, roomName) {
       console.log(`${roomName} has no more users`);
       rooms.splice(index, 1);
       sendToAll('roomList', sendRooms());
+
+    }
+
+    if (!room.playing) {
+
+      await db.changeCash(user.id, room.buyIn);
 
     }
 
@@ -85,7 +93,7 @@ async function start(io) {
 
       console.log('room req');
 
-      const { room, token } = data;
+      const { room, buyIn, token } = data;
 
       const user = await checkToken(token);
 
@@ -104,12 +112,21 @@ async function start(io) {
 
       }
 
+      else if (user.cash < buyIn) {
+
+        socket.emit('cashError');
+
+      }
+
       else {
 
+        const cashLeft = await db.changeCash(user.id, -1 * buyIn);
+        socket.emit('cashChange', cashLeft);
         socket.emit('createRoomSuccess', room);
         socket.join(room);
         currentRoom = room;
-        rooms.push(new PokerRoom(room, user));
+        console.log('join',user);
+        rooms.push(new PokerRoom(room, buyIn, user));
         sendToAll('roomList', sendRooms());
 
       }

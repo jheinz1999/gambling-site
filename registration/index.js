@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 
 const { generateToken } = require('../common/authentication');
-const db = require('../data/db');
+const { db } = require('../data/db');
 
 const server = express.Router();
 
@@ -89,7 +89,7 @@ server.post('/login', async (req, res) => {
 
   try {
 
-    const user = await db.select('username', 'password', 'id').from('users').where('username', username).first();
+    const user = await db.select('username', 'password', 'id', 'cash').from('users').where('username', username).first();
 
     if (user) {
 
@@ -102,7 +102,8 @@ server.post('/login', async (req, res) => {
         res.status(200).json({
           user_id: user.id,
           username: user.username,
-          token
+          token,
+          cash: user.cash
         });
 
       }
