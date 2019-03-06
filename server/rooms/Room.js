@@ -2,7 +2,7 @@ const { getIO, checkToken } = require('../common/globals');
 
 class Room {
 
-  constructor(name, leader) {
+  constructor(name, buyIn, leader) {
 
     leader.isLeader = true;
 
@@ -12,6 +12,8 @@ class Room {
     this.leaderID = leader.id;
     this.ready = 0;
     this.playing = false;
+    this.buyIn = buyIn;
+    this.cash = [];
 
     this.clearIO();
     this.listenIO();
@@ -101,6 +103,12 @@ class Room {
       });
 
       socket.on('readyToStart', id => {
+
+        for (let i = 0; i < this.users.length; i++) {
+
+          this.cash.push(this.buyIn);
+
+        }
 
         if (this.users.find(user => user.id === id)) {
 

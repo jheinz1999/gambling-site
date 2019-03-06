@@ -1,9 +1,12 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { updateUser } from '../../redux/actions';
 
 import './Navbar.scss';
 
-export default function Navbar() {
+function Navbar({user, updateUser}) {
 
   return (
 
@@ -28,7 +31,8 @@ export default function Navbar() {
         ?
         <Link to="/" onClick={() => {
           localStorage.clear();
-        }}>Log Out</Link>
+          updateUser(null);
+        }}>{user.username}: ${user.cash}</Link>
         :
         <><NavLink exact to='/login' activeClassName='active'>Log In</NavLink>
         <NavLink exact to='/signup' activeClassName='active'>Sign Up</NavLink></>}
@@ -40,3 +44,9 @@ export default function Navbar() {
   );
 
 }
+
+const stateToProps = state => {
+  return { user: state.user }
+};
+
+export default connect(stateToProps, { updateUser })(Navbar);

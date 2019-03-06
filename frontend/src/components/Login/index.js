@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
 
 import config from '../../config';
+import { updateUser } from '../../redux/actions';
 
 import './Login.scss';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
 
   constructor() {
 
@@ -35,6 +37,7 @@ export default class Login extends React.Component {
   handleSuccess = res => {
 
     localStorage.user = JSON.stringify(res.data);
+    this.props.updateUser(res.data);
     this.props.history.push('/dashboard');
 
   }
@@ -75,3 +78,5 @@ export default class Login extends React.Component {
   }
 
 }
+
+export default connect(null, { updateUser })(Login);

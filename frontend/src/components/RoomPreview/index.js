@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import './preview.scss';
 
-function RoomPreview({name, users, leaderID, history, socket}) {
+function RoomPreview({name, users, leaderID, buyIn, history, socket}) {
 
   const data = {
 
@@ -29,6 +29,7 @@ function RoomPreview({name, users, leaderID, history, socket}) {
 
       <h2>{name}</h2>
       <p>{users.length}/5 connected</p>
+      <p>buy in: {buyIn}</p>
 
     </div>
 

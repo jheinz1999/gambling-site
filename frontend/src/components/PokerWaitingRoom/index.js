@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import UsersList from '../UsersList';
+import UsersList from './UsersList';
 import Messenger from '../Messenger';
 
 import './PokerWaitingRoom.scss';

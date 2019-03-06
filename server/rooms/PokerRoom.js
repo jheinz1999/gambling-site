@@ -4,9 +4,9 @@ const { getIO } = require('../common/globals');
 
 class PokerRoom extends Room {
 
-  constructor(name, leader) {
+  constructor(name, buyIn, leader) {
 
-    super(name, leader);
+    super(name, buyIn, leader);
     this.hands = [];
     this.deck = new Deck();
     this.pot = 0;

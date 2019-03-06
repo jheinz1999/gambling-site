@@ -11,7 +11,8 @@ class CreateRoomForm extends React.Component {
 
     this.state = {
 
-      room: ''
+      room: '',
+      buyIn: 100
 
     }
 
@@ -28,13 +29,14 @@ class CreateRoomForm extends React.Component {
   handleSubmit = e => {
 
     const { socket } = this.props;
-    const { room } = this.state;
+    const { room, buyIn } = this.state;
 
     e.preventDefault();
 
     const data = {
 
       room,
+      buyIn,
       token: JSON.parse(localStorage.user).token
 
     }
@@ -51,7 +53,22 @@ class CreateRoomForm extends React.Component {
 
         <div className='elements'>
 
-          <input type='text' name='room' onChange={this.handleChange} placeholder='room' required />
+          <input type='text' name='room' onChange={this.handleChange} placeholder='room' required /><br/>
+          <span>Buy in: </span>
+          <select name='buyIn' onChange={this.handleChange} placeholder='100' required>
+
+            <option value='100'>100</option>
+            <option value='200'>200</option>
+            <option value='200'>300</option>
+            <option value='200'>400</option>
+            <option value='200'>500</option>
+            <option value='200'>600</option>
+            <option value='200'>700</option>
+            <option value='200'>800</option>
+            <option value='200'>900</option>
+            <option value='200'>1000</option>
+
+          </select><br/>
           <button>Create room</button>
 
         </div>
