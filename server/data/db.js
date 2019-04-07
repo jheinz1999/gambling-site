@@ -13,6 +13,8 @@ module.exports = {
     return new Promise(async function(resolve, reject) {
 
       const user = await db.select().from('users').where({id}).first();
+      console.log('cash', user.cash);
+      console.log('amount', amount);
       await db('users').update({cash: user.cash + amount}).where({id});
 
       resolve(user.cash + amount);

@@ -36,7 +36,7 @@ class CreateRoomForm extends React.Component {
     const data = {
 
       room,
-      buyIn,
+      buyIn: Number(buyIn),
       token: JSON.parse(localStorage.user).token
 
     }

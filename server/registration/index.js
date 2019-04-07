@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 
-const { generateToken } = require('../common/authentication');
+const { generateToken, authenticate } = require('../common/authentication');
 const { db } = require('../data/db');
 
 const server = express.Router();
@@ -119,6 +119,14 @@ server.post('/login', async (req, res) => {
     res.status(500);
 
   }
+
+});
+
+server.get('/userInfo', authenticate, async (req, res) => {
+
+  const cash = await db.select('cash').from('users').where('id', req.decoded.id).first();
+
+  res.status(200).json(cash);
 
 });
 

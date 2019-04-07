@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import CreateRoomForm from '../CreateRoomForm';
 import RoomPreview from '../RoomPreview';
 
-import { updateUser } from '../../redux/actions';
+import { updateUser, updateCash } from '../../redux/actions';
+import config from '../../config';
 
 import './PokerLobby.scss';
 
@@ -17,7 +19,6 @@ class PokerLobby extends React.Component {
     this.state = {
 
       verified: false,
-      user: null,
       rooms: null
 
     }
@@ -26,7 +27,7 @@ class PokerLobby extends React.Component {
 
   componentDidMount() {
 
-    if (!localStorage.user) {
+    if (!this.props.user) {
 
       this.props.history.push('/login');
 
@@ -34,9 +35,17 @@ class PokerLobby extends React.Component {
 
     else {
 
-      this.setState({
-        user: JSON.parse(localStorage.user)
-      }, this.setupSocket);
+      axios.get(`${config.SERVER_URL}/api/registration/userInfo`, {
+        headers: {
+          Authorization: this.props.user.token
+        }
+      }).then(res => {
+
+        this.props.updateCash(res.data.cash);
+        this.setupSocket();
+        console.log(this.props.user);
+
+      });
 
     }
 
@@ -50,8 +59,7 @@ class PokerLobby extends React.Component {
 
   setupSocket = () => {
 
-    const { user } = this.state;
-    const { history, socket } = this.props;
+    const { history, socket, user } = this.props;
 
     socket.emit('loginRes', user.token);
     socket.emit('getRooms');
@@ -93,10 +101,7 @@ class PokerLobby extends React.Component {
 
     socket.on('cashChange', cash => {
 
-      const user = Object.assign({}, this.props.user);
-      user.cash = cash;
-
-      this.props.updateUser(user);
+      this.props.updateCash(cash);
 
     });
 
@@ -147,4 +152,4 @@ const stateToProps = state => {
 
 }
 
-export default connect(stateToProps, { updateUser })(PokerLobby);
+export default connect(stateToProps, { updateUser, updateCash })(PokerLobby);
