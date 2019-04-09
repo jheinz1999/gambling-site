@@ -15,7 +15,8 @@ class PokerGame extends React.Component {
       allReady: false,
       users: null,
       user: null,
-      hand: null
+      hand: null,
+      roomName: null
 
     }
 
@@ -54,7 +55,7 @@ class PokerGame extends React.Component {
 
       else {
 
-        this.setState({joined: true, users: room.users});
+        this.setState({joined: true, users: room.users, roomName: room.name});
         socket.emit('readyToStart', this.state.user.user_id);
 
       }
@@ -77,7 +78,7 @@ class PokerGame extends React.Component {
 
   render() {
 
-    const { joined, allReady, hand } = this.state;
+    const { joined, allReady, hand, roomName, users } = this.state;
 
     if (!joined)
       return <h1>Joining room...</h1>
@@ -92,7 +93,20 @@ class PokerGame extends React.Component {
 
       <div className='poker-game'>
 
-        <h1>poker</h1>
+        <h1>{roomName}</h1>
+
+        <div className='opponents'>
+
+          { users.map(user => (
+            <div className='opponent'>
+
+              <h2>{user.username}</h2>
+              <p>${user.cash}</p>
+
+            </div>
+          )) }
+
+        </div>
 
         <h2>Your Hand</h2>
 

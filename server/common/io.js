@@ -81,8 +81,8 @@ async function start(io) {
       }
 
       // join room of user so server can have private messages to user
-      socket.join(user.username);
-      console.log('joined a room called', user.username);
+      socket.join(`user_room_${user.username}`);
+      console.log('joined a room called', `user_room_${user.username}`);
 
       socket.emit('loginSuccess');
       console.log('success');
@@ -164,6 +164,8 @@ async function start(io) {
 
       else {
 
+        const cashLeft = await db.changeCash(user.id, -1 * createdRoom.buyIn);
+        socket.emit('cashChange', cashLeft);
         socket.join(room);
         createdRoom.addUser(user);
         currentRoom = room;

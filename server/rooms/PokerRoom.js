@@ -21,7 +21,7 @@ class PokerRoom extends Room {
     for (let i = 0; i < this.users.length; i++) {
 
       this.hands.push(this.deck.draw(2));
-      getIO().to(this.users[i].username).emit('newHand', this.hands[i]);
+      getIO().to(`user_room_${this.users[i].username}`).emit('newHand', this.hands[i]);
 
     }
 
