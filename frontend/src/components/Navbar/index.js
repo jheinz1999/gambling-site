@@ -18,7 +18,7 @@ function Navbar({user, updateUser}) {
 
       </div>
 
-      {localStorage.user && (<div className='middle-group'>
+      {user && (<div className='middle-group'>
 
         <NavLink exact to='/poker' activeClassName='active'>Play Poker</NavLink>
         <NavLink exact to='/blackjack' activeClassName='active'>Play Blackjack</NavLink>
@@ -27,7 +27,7 @@ function Navbar({user, updateUser}) {
 
       <div className='right-group'>
 
-        {localStorage.user
+        {user
         ?
         <Link to="/" onClick={() => {
           localStorage.clear();

@@ -1,12 +1,14 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const multipart = require('connect-multiparty')();
 
 const { generateToken, authenticate } = require('../common/authentication');
 const { db } = require('../data/db');
+const { uploadImage } = require('../common/cloudinary');
 
 const server = express.Router();
 
-server.post('/register', async (req, res) => {
+server.post('/register', multipart, async (req, res) => {
 
   let { username, password, email } = req.body;
 
@@ -31,19 +33,40 @@ server.post('/register', async (req, res) => {
 
   }
 
+  console.log('past here');
+
   try {
+
+    let img_id;
+
+    console.log('upload...');
+    console.log(req.files);
+    console.log(req.files === true)
+
+    if (req.files.image !== undefined) {
+      console.log('yeet');
+      console.log(req.files.image.path);
+      img_id = await uploadImage(req.files.image.path);
+    }
+
+    else {
+      console.log('nah homie');
+      img_id = 1;
+    }
 
     password = await bcrypt.hash(password, 1);
 
-    await db.insert({ username, password, email, cash: 1000 }).into('users');
-    const user = await db.select('username', 'id', 'cash').from('users').where('username', username).first();
+    await db.insert({ username, password, email, img_id, cash: 1000 }).into('users');
+    const user = await db.select('u.username', 'u.password', 'u.id', 'u.cash', 'i.img_url').from('users as u').join('images as i', 'u.img_id', 'i.id').where('username', username).first();
 
     const token = await generateToken(user);
 
     res.status(201).json({
-      username: user.username,
       user_id: user.id,
-      token
+      username: user.username,
+      token,
+      cash: user.cash,
+      img_url: user.img_url
     });
 
   }
@@ -55,7 +78,7 @@ server.post('/register', async (req, res) => {
 
     if (withName || withEmail) {
 
-      res.status(400).json({message: 'Duplicate name or email!', duplicateUser: withName !== undefined, duplicateEmail: withEmail !== undefined});
+      res.status(400).json({message: 'Duplicate name or email!'});
 
     }
 
@@ -89,7 +112,7 @@ server.post('/login', async (req, res) => {
 
   try {
 
-    const user = await db.select('username', 'password', 'id', 'cash').from('users').where('username', username).first();
+    const user = await db.select('u.username', 'u.password', 'u.id', 'u.cash', 'i.img_url').from('users as u').join('images as i', 'u.img_id', 'i.id').where('username', username).first();
 
     if (user) {
 
@@ -103,7 +126,8 @@ server.post('/login', async (req, res) => {
           user_id: user.id,
           username: user.username,
           token,
-          cash: user.cash
+          cash: user.cash,
+          img_url: user.img_url
         });
 
       }
