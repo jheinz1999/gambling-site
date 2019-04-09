@@ -7,6 +7,7 @@ exports.up = function(knex, Promise) {
     tbl.string('username').notNullable().unique();
     tbl.string('email').notNullable().unique();
     tbl.string('password').notNullable();
+    tbl.integer('img_id').notNullable().references('id').inTable('images');
     tbl.integer('cash').notNullable();
 
   });
