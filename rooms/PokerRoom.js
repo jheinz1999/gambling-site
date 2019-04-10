@@ -13,6 +13,7 @@ class PokerRoom extends Room {
         newThis.deck = new Deck();
         newThis.pot = 0;
         newThis.turn = 0;
+        newThis.cards = [null, null, null, null, null];
 
       })
 
