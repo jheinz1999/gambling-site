@@ -1,4 +1,5 @@
 const { getIO, checkToken } = require('../common/globals');
+const { db } = require('../data/db');
 
 class Room {
 
@@ -7,7 +8,7 @@ class Room {
     leader.isLeader = true;
 
     this.name = name;
-    this.users = [leader];
+    this.users = [];
     this.sockets = [];
     this.leaderID = leader.id;
     this.ready = 0;
@@ -17,6 +18,11 @@ class Room {
 
     this.clearIO();
     this.listenIO();
+
+    return new Promise(async (resolve, reject) => {
+      await this.addUser(leader);
+      resolve(this);
+    });
 
   }
 
@@ -107,6 +113,7 @@ class Room {
         for (let i = 0; i < this.users.length; i++) {
 
           this.cash.push(this.buyIn);
+          console.log('pushed?');
 
         }
 
@@ -114,7 +121,7 @@ class Room {
 
           this.ready++;
 
-          console.log('ready', id, this.ready);
+          console.log('ready', id, this.ready, this.cash);
 
           if (this.ready === this.users.length) {
             this.emit('allReady');
@@ -129,20 +136,28 @@ class Room {
 
   }
 
-  addUser(user) {
+  async addUser(user) {
 
-    this.users.push(user);
-    this.clearIO();
-    this.listenIO();
-    this.emit('newUser', user.username);
-    this.emit('users', this.users);
-    this.emit('newMsg', {
-      user: '[server]',
-      message: 'a new challenger approaches'
-    });
-    this.emit('newMsg', {
-      user: '[server]',
-      message: `${user.username} has entered the game`
+    return new Promise(async (resolve, reject) => {
+
+      const newUserObj = await db.select('u.username', 'u.id', 'u.cash', 'i.img_url').from('users as u').join('images as i', 'u.img_id', 'i.id').where('username', user.username).first();
+
+      this.users.push(newUserObj);
+      this.clearIO();
+      this.listenIO();
+      this.emit('newUser', newUserObj.username);
+      this.emit('users', this.users);
+      this.emit('newMsg', {
+        user: '[server]',
+        message: 'a new challenger approaches'
+      });
+      this.emit('newMsg', {
+        user: '[server]',
+        message: `${user.username} has entered the game`
+      });
+
+      resolve();
+
     });
 
   }

@@ -55,6 +55,7 @@ class PokerGame extends React.Component {
 
       else {
 
+        console.log('room',room);
         this.setState({joined: true, users: room.users, roomName: room.name});
         socket.emit('readyToStart', this.state.user.user_id);
 
@@ -100,6 +101,7 @@ class PokerGame extends React.Component {
           { users.map(user => (
             <div className='opponent'>
 
+              <img src={user.img_url} alt='opponent' />
               <h2>{user.username}</h2>
               <p>${user.cash}</p>
 
