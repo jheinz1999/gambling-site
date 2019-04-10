@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import ChatSystem from '../ChatSystem';
 import cards from './Cards';
 
 import './PokerGame.scss';
@@ -18,6 +19,7 @@ class PokerGame extends React.Component {
       users: null,
       user: null,
       hand: null,
+      cards: null,
       roomName: null
 
     }
@@ -58,7 +60,7 @@ class PokerGame extends React.Component {
       else {
 
         console.log('room',room);
-        this.setState({joined: true, users: room.users, roomName: room.name});
+        this.setState({joined: true, users: room.users, roomName: room.name, cards: room.cards});
         socket.emit('readyToStart', this.state.user.user_id);
 
       }
@@ -100,7 +102,7 @@ class PokerGame extends React.Component {
 
         <div className='opponents'>
 
-          { users.map(user => (
+          { users.map(user => user.id !== this.props.user.user_id && (
             <div className='opponent'>
 
               <img src={user.img_url} alt='opponent' />
@@ -114,7 +116,14 @@ class PokerGame extends React.Component {
 
         <div className='table'>
 
+          {this.state.cards.map(card => {
 
+            if (card)
+              return <img className='card' src={cards[`_${card.card}_${card.suit}`]} alt='playing card' />
+
+            return <img className='card' src={cards['unknown']} alt='playing card' />
+
+          })}
 
         </div>
 
@@ -137,6 +146,8 @@ class PokerGame extends React.Component {
 
         </div>
 
+        <ChatSystem />
+
       </div>
 
     );
@@ -149,7 +160,8 @@ const stateToProps = state => {
 
   return {
 
-    socket: state.socket
+    socket: state.socket,
+    user: state.user
 
   }
 
