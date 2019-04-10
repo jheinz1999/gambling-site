@@ -50,6 +50,7 @@ import _10_H from './cards/_10_H.png';
 import _J_H from './cards/_J_H.png';
 import _Q_H from './cards/_Q_H.png';
 import _K_H from './cards/_K_H.png';
+import unknown from './cards/unknown.png';
 
 export default {
 
@@ -105,5 +106,6 @@ export default {
   _J_D,
   _Q_D,
   _K_D,
+  unknown
 
 }

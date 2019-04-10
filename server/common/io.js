@@ -200,7 +200,7 @@ async function start(io) {
           name: room.name,
           users: room.users,
           leaderID: room.leaderID,
-          cash: room.cash
+          cards: room.cards
         });
 
       }
