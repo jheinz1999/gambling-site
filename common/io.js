@@ -121,13 +121,16 @@ async function start(io) {
       else {
 
         const cashLeft = await db.changeCash(user.id, -1 * buyIn);
-        socket.emit('cashChange', cashLeft);
-        socket.emit('createRoomSuccess', room);
         socket.join(room);
         currentRoom = room;
         console.log('join',user);
-        rooms.push(new PokerRoom(room, buyIn, user));
-        sendToAll('roomList', sendRooms());
+        new PokerRoom(room, buyIn, user).then(newestRoom => {
+          rooms.push(newestRoom);
+          console.log('newest room', newestRoom);
+          socket.emit('cashChange', cashLeft);
+          socket.emit('createRoomSuccess', room);
+          sendToAll('roomList', sendRooms());
+        });
 
       }
 
@@ -167,7 +170,7 @@ async function start(io) {
         const cashLeft = await db.changeCash(user.id, -1 * createdRoom.buyIn);
         socket.emit('cashChange', cashLeft);
         socket.join(room);
-        createdRoom.addUser(user);
+        await createdRoom.addUser(user);
         currentRoom = room;
         socket.emit('joinSuccess');
 
@@ -196,7 +199,8 @@ async function start(io) {
         socket.emit('room', {
           name: room.name,
           users: room.users,
-          leaderID: room.leaderID
+          leaderID: room.leaderID,
+          cash: room.cash
         });
 
       }

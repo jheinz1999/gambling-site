@@ -6,11 +6,15 @@ class PokerRoom extends Room {
 
   constructor(name, buyIn, leader) {
 
-    super(name, buyIn, leader);
-    this.hands = [];
-    this.deck = new Deck();
-    this.pot = 0;
-    this.turn = 0;
+    super(name, buyIn, leader)
+      .then(newThis => {
+
+        newThis.hands = [];
+        newThis.deck = new Deck();
+        newThis.pot = 0;
+        newThis.turn = 0;
+
+      })
 
   }
 
