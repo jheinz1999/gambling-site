@@ -1,0 +1,47 @@
+.poker-game {
+
+  h1 {
+
+    text-align: center;
+    margin-top: 20px;
+
+  }
+
+  .opponents {
+
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    text-align: center;
+    margin-top: 20px;
+
+    .opponent {
+
+      margin: 0 15px;
+
+      img {
+
+        background-color: purple;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+
+      }
+
+      h2 {
+
+        margin: 10px 0;
+
+      }
+
+      p {
+
+        color: green;
+
+      }
+
+    }
+
+  }
+
+}
