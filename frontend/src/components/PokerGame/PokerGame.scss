@@ -44,4 +44,46 @@
 
   }
 
+  .card {
+
+    width: 120px;
+    height: 175px;
+    margin: 0 10px;
+
+    &:first-child {
+
+      margin-left: 0;
+
+    }
+
+    &:last-child {
+
+      margin-right: 0;
+
+    }
+
+  }
+
+  .hand {
+
+    margin: auto;
+    width: 300px;
+    height: 175px;
+
+    h2 {
+
+      text-align: center;
+      margin-bottom: 20px;
+
+    }
+
+    .cards {
+
+      display: flex;
+      justify-content: center;
+
+    }
+
+  }
+
 }
