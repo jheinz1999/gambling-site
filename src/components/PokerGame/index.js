@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import cards from './Cards';
+
 import './PokerGame.scss';
 
 class PokerGame extends React.Component {
@@ -110,9 +112,30 @@ class PokerGame extends React.Component {
 
         </div>
 
-        <h2>Your Hand</h2>
+        <div className='table'>
 
-        {hand.map(card => <p>{card.card} of {card.suit}</p>)}
+
+
+        </div>
+
+        <div className='hand'>
+
+          <h2>Your Hand</h2>
+
+          <div className='cards'>
+
+            {hand.map(card => {
+
+              console.log(cards[`_${card.card}_${card.suit}`]);
+              console.log(cards['_Q_D'], cards['_4_S']);
+
+              return <img className='card' src={cards[`_${card.card}_${card.suit}`]} alt='playing card' />
+
+            })}
+
+          </div>
+
+        </div>
 
       </div>
 
