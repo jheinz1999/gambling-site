@@ -5,6 +5,20 @@
     text-align: center;
     margin-top: 20px;
 
+    span {
+
+      color: green;
+      font-weight: bold;
+
+    }
+
+  }
+
+  .status-display {
+
+    margin: 15px 0;
+    text-align: center;
+
   }
 
   .opponents {
@@ -64,11 +78,48 @@
 
   }
 
-  .table {
+  .cards {
 
     display: flex;
     justify-content: center;
+
+  }
+
+  .table {
+
     margin: 20px 0;
+
+    p {
+
+      margin-top: 20px;
+      font-size: 3rem;
+      text-align: center;
+
+      span {
+
+        color: green;
+        font-weight: bold;
+
+      }
+
+    }
+
+  }
+
+  .control-system {
+
+    margin: auto;
+    margin-top: 20px;
+    text-align: center;
+
+    button {
+
+      display: block;
+      margin: auto;
+      width: 100%;
+      padding: 10px 0;
+
+    }
 
   }
 
@@ -82,13 +133,6 @@
 
       text-align: center;
       margin-bottom: 20px;
-
-    }
-
-    .cards {
-
-      display: flex;
-      justify-content: center;
 
     }
 
