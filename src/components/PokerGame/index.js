@@ -20,7 +20,12 @@ class PokerGame extends React.Component {
       user: null,
       hand: null,
       cards: null,
-      roomName: null
+      roomName: null,
+      pot: null,
+      cash: null,
+      bet: null,
+      bets: null,
+      turn: null
 
     }
 
@@ -49,6 +54,16 @@ class PokerGame extends React.Component {
 
     socket.emit('roomReq', this.props.match.params.name);
 
+    socket.on('newPot', pot => this.setState({ pot }));
+
+    socket.on('newBet', bet => this.setState({ bet }));
+
+    socket.on('newBets', bets => this.setState({ bets }));
+
+    socket.on('newTurn', turn => this.setState({ turn }));
+
+    socket.on('newGameCash', cash => this.setState({ cash }));
+
     socket.on('room', room => {
 
       if (!room.users.find(user => user.username === this.state.user.username)) {
@@ -60,7 +75,7 @@ class PokerGame extends React.Component {
       else {
 
         console.log('room',room);
-        this.setState({joined: true, users: room.users, roomName: room.name, cards: room.cards});
+        this.setState({joined: true, users: room.users, roomName: room.name, cards: room.cards, pot: room.pot, cash: room.cash, userIndex: room.users.indexOf(room.users.find(user => user.id === this.props.user.user_id)), bet: room.bet});
         socket.emit('readyToStart', this.state.user.user_id);
 
       }
@@ -81,9 +96,21 @@ class PokerGame extends React.Component {
 
   }
 
+  takeTurn(action, payload) {
+
+    this.props.socket.emit('turnTaken', {
+      action,
+      payload,
+      id: this.state.userIndex
+    });
+
+  }
+
   render() {
 
-    const { joined, allReady, hand, roomName, users } = this.state;
+    const { joined, allReady, hand, roomName, users, cash, userIndex, bet, bets, turn } = this.state;
+
+    console.log('turn', turn);
 
     if (!joined)
       return <h1>Joining room...</h1>
@@ -91,7 +118,7 @@ class PokerGame extends React.Component {
     if (!allReady)
       return <h1>Waiting for players...</h1>
 
-    if (!hand)
+    if (!bets)
       return <h1>Dealing cards...</h1>
 
     return (
@@ -100,14 +127,23 @@ class PokerGame extends React.Component {
 
         <h1>{roomName}</h1>
 
+        <div className='status-display'>
+
+          <h2>Your cash: <span>${cash[userIndex]}</span></h2>
+          <h2>Current bet: <span>${bet}</span></h2>
+          <h2>Your bet: <span>${bets[userIndex]}</span></h2>
+
+        </div>
+
         <div className='opponents'>
 
-          { users.map(user => user.id !== this.props.user.user_id && (
+          { users.map((user, i) => user.id !== this.props.user.user_id && (
             <div className='opponent'>
 
               <img src={user.img_url} alt='opponent' />
               <h2>{user.username}</h2>
-              <p>${user.cash}</p>
+              <p>${cash[i]}</p>
+              <p>Current bet: ${bets[i]}</p>
 
             </div>
           )) }
@@ -116,14 +152,20 @@ class PokerGame extends React.Component {
 
         <div className='table'>
 
-          {this.state.cards.map(card => {
+          <div className='cards'>
 
-            if (card)
-              return <img className='card' src={cards[`_${card.card}_${card.suit}`]} alt='playing card' />
+            {this.state.cards.map(card => {
 
-            return <img className='card' src={cards['unknown']} alt='playing card' />
+              if (card)
+                return <img className='card' src={cards[`_${card.card}_${card.suit}`]} alt='playing card' />
 
-          })}
+              return <img className='card' src={cards['unknown']} alt='playing card' />
+
+            })}
+
+          </div>
+
+          <p>Cash in pot: <span>${this.state.pot}</span></p>
 
         </div>
 
@@ -141,6 +183,14 @@ class PokerGame extends React.Component {
               return <img className='card' src={cards[`_${card.card}_${card.suit}`]} alt='playing card' />
 
             })}
+
+          </div>
+
+          <div className='control-system'>
+
+            <button disabled={turn !== userIndex} onClick={() => this.takeTurn('call')}>Call</button>
+            <button disabled={turn !== userIndex} onClick={() => this.takeTurn('raise', 5)}>Raise</button>
+            <button disabled={turn !== userIndex} onClick={() => this.takeTurn('fold')}>Fold</button>
 
           </div>
 
