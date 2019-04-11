@@ -197,10 +197,8 @@ async function start(io) {
       else {
 
         socket.emit('room', {
-          name: room.name,
-          users: room.users,
-          leaderID: room.leaderID,
-          cards: room.cards
+          ...room,
+          sockets: null
         });
 
       }
