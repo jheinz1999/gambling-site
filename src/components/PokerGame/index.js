@@ -54,6 +54,8 @@ class PokerGame extends React.Component {
 
     socket.emit('roomReq', this.props.match.params.name);
 
+    socket.on('newCards', cards => this.setState({ cards }));
+
     socket.on('newPot', pot => this.setState({ pot }));
 
     socket.on('newBet', bet => this.setState({ bet }));
