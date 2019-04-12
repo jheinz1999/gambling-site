@@ -77,7 +77,25 @@ class PokerRoom extends Room {
 
   nextStage() {
 
-    console.log('next stage');
+    this.stage++;
+
+    this.pot += this.bets.reduce((acc, val) => acc + val);
+    this.bets = this.users.map(() => 0);
+    this.bet = 0;
+
+    this.emit('newPot', this.pot);
+    this.emit('newBets', this.bets);
+    this.emit('newBet', this.bet);
+
+    if (this.stage === 1) {
+
+      this.cards = this.deck.draw(3).concat([null, null]);
+
+      console.log('cards', this.cards);
+
+      this.emit('newCards', this.cards);
+
+    }
 
   }
 
