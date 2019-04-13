@@ -157,7 +157,7 @@ class PokerWaitingRoom extends React.Component {
           user={this.state.user}
           leaderID={this.state.leaderID} />
 
-        <Messenger username={this.state.user.username} />
+        <Messenger />
 
         {this.state.leaderID === this.state.user.user_id
         && <button onClick={this.startGame} disabled={this.state.users.length === 1}>Start Game</button>}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import ChatSystem from '../ChatSystem';
+import Messenger from '../Messenger';
 import cards from './Cards';
 
 import './PokerGame.scss';
@@ -233,7 +233,7 @@ class PokerGame extends React.Component {
 
         </div>
 
-        <ChatSystem />
+        <Messenger onBottom />
 
       </div>
 
