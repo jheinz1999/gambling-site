@@ -28,7 +28,13 @@ function sendRooms() {
 
 }
 
-async function removeFromRoom(user, roomName) {
+async function removeFromRoom(user, roomName, socket) {
+
+  socket.removeAllListeners('usersReq');
+  socket.removeAllListeners('sendMsg');
+  socket.removeAllListeners('startGame');
+  socket.removeAllListeners('readyToStart');
+  socket.removeAllListeners('turnTaken');
 
   const room = rooms.find(existingRoom => existingRoom.name === roomName);
 
@@ -209,13 +215,8 @@ async function start(io) {
 
       console.log('outie');
 
-      removeFromRoom(user, room);
+      removeFromRoom(user, room, socket);
       currentRoom = null;
-      socket.removeAllListeners('usersReq');
-      socket.removeAllListeners('sendMsg');
-      socket.removeAllListeners('startGame');
-      socket.removeAllListeners('readyToStart');
-      socket.removeAllListeners('turnTaken');
 
     });
 
@@ -225,7 +226,7 @@ async function start(io) {
 
       if (currentRoom) {
 
-        removeFromRoom(user, currentRoom);
+        removeFromRoom(user, currentRoom, socket);
 
       }
 
