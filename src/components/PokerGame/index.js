@@ -26,7 +26,9 @@ class PokerGame extends React.Component {
       bet: null,
       bets: null,
       turn: null,
-      raise: 1
+      raise: 1,
+      nonexistent: false,
+      notInRoom: false
 
     }
 
@@ -79,11 +81,17 @@ class PokerGame extends React.Component {
 
     socket.on('newGameCash', cash => this.setState({ cash }));
 
+    socket.on('nonexistentRoom', () => {
+
+      this.setState({nonexistent: true});
+
+    });
+
     socket.on('room', room => {
 
       if (!room.users.find(user => user.username === this.state.user.username)) {
 
-        console.error('you aint in this room foo');
+        this.setState({ notInRoom: true });
 
       }
 
@@ -123,9 +131,13 @@ class PokerGame extends React.Component {
 
   render() {
 
-    const { joined, allReady, hand, roomName, users, cash, userIndex, bet, bets, turn } = this.state;
+    const { joined, allReady, hand, roomName, users, cash, userIndex, bet, bets, turn, nonexistent, notInRoom } = this.state;
 
-    console.log('turn', turn);
+    if (nonexistent)
+      return <h1>The room you are trying to access does not exist.</h1>
+
+    if (notInRoom)
+      return <h1>You are not in this room!</h1>
 
     if (!joined)
       return <h1>Joining room...</h1>
