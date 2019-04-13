@@ -213,6 +213,9 @@ async function start(io) {
       currentRoom = null;
       socket.removeAllListeners('usersReq');
       socket.removeAllListeners('sendMsg');
+      socket.removeAllListeners('startGame');
+      socket.removeAllListeners('readyToStart');
+      socket.removeAllListeners('turnTaken');
 
     });
 
