@@ -130,7 +130,10 @@ class PokerWaitingRoom extends React.Component {
 
   render() {
 
-    const { joined } = this.state;
+    const { joined, nonexistent } = this.state;
+
+    if (nonexistent)
+      return <h1>The room you are trying to access does not exist.</h1>
 
     if (!joined)
       return <h1>Joining room...</h1>
