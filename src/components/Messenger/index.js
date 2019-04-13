@@ -14,7 +14,9 @@ class Messenger extends React.Component {
     this.state = {
 
       messages: [],
-      message: ''
+      message: '',
+      open: false,
+      unread: 0
 
     }
 
@@ -38,11 +40,13 @@ class Messenger extends React.Component {
 
     socket.on('newMsg', data => {
 
-      console.log('yeet');
+      this.setState({messages: [...this.state.messages, data], unread: this.state.open ? 0 : this.state.unread + 1}, () => {
+        if (!this.props.onBottom || this.state.open) {
 
-      this.setState({messages: [...this.state.messages, data]}, () => {
-        const msgs = document.querySelector('.messages');
-        msgs.scrollTop = data.scrollHeight;
+          const msgs = document.querySelector('.messages');
+          msgs.scrollTop = msgs.scrollHeight;
+
+        }
       });
 
     });
@@ -59,8 +63,6 @@ class Messenger extends React.Component {
 
   sendMsg = e => {
 
-    console.log('abc');
-
     e.preventDefault();
 
     this.props.socket.emit('sendMsg', {
@@ -72,7 +74,7 @@ class Messenger extends React.Component {
 
   }
 
-  render() {
+  renderNormal() {
 
     return (
 
@@ -97,13 +99,77 @@ class Messenger extends React.Component {
 
   }
 
+  toggle = () => {
+
+    this.setState({open: !this.state.open}, () => {
+
+      if (this.state.open) {
+
+        this.setState({ unread: 0 });
+        const msgs = document.querySelector('.messages');
+        msgs.scrollTop = msgs.scrollHeight;
+
+      }
+
+    });
+
+  }
+
+  renderBottom() {
+
+    const { unread, open } = this.state;
+
+    return (
+
+      <div className='messenger-bottom'>
+
+        {!open && (
+          <div className='closed' onClick={this.toggle}><p>{unread === 0 ? 'Chat' : `Chat (${unread})`}</p></div>
+        )}
+
+        {open && (
+
+          <div className='open'>
+
+            <div className='top' onClick={this.toggle}><p>Chat</p></div>
+
+            <div className='messages'>
+
+              {this.state.messages.map((message, id) => <Message key={id} data={message} />)}
+
+            </div>
+
+            <form className='submit-form' onSubmit={this.sendMsg}>
+
+              <input type='text' name='message' placeholder='message' value={this.state.message} onChange={this.handleChange} autoComplete='off' />
+              <button>Send</button>
+
+            </form>
+
+          </div>
+
+        )}
+
+      </div>
+
+    );
+
+  }
+
+  render() {
+
+    return this.props.onBottom ? this.renderBottom() : this.renderNormal();
+
+  }
+
 }
 
 const stateToProps = state => {
 
   return {
 
-    socket: state.socket
+    socket: state.socket,
+    username: state.user.username
 
   }
 

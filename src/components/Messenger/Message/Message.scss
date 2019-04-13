@@ -4,12 +4,20 @@
   justify-content: space-between;
   margin-bottom: 10px;
 
-  p:nth-child(2) {
+  // p:nth-child(2) {
+  //
+  //   max-width: 70%;
+  //   word-wrap: break-word;
+  //   text-align: left;
+  //   padding-right: 10px;
+  //
+  // }
 
-    max-width: 70%;
+  p {
+
+    width: 47%;
     word-wrap: break-word;
     text-align: left;
-    padding-right: 10px;
 
   }
 
