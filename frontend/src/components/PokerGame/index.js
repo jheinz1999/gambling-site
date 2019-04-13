@@ -25,9 +25,22 @@ class PokerGame extends React.Component {
       cash: null,
       bet: null,
       bets: null,
-      turn: null
+      turn: null,
+      raise: 1
 
     }
+
+  }
+
+  setRaise = e => {
+
+    let raise = e.target.value;
+    let max = this.state.cash[this.state.userIndex] - this.state.bet;
+
+    if (raise > max)
+      raise = max;
+
+    this.setState({raise});
 
   }
 
@@ -191,7 +204,17 @@ class PokerGame extends React.Component {
           <div className='control-system'>
 
             <button disabled={turn !== userIndex} onClick={() => this.takeTurn('call')}>Call</button>
-            <button disabled={turn !== userIndex} onClick={() => this.takeTurn('raise', 5)}>Raise</button>
+
+            <div className='raise'>
+
+              <input type='number' min='1' max={cash[userIndex] - bet} value={this.state.raise} onChange={this.setRaise} name='raise' />
+              <button disabled={turn !== userIndex} onClick={() => {
+                this.takeTurn('raise', Number(this.state.raise));
+                this.setState({raise: 1});
+              }}>Raise</button>
+
+            </div>
+
             <button disabled={turn !== userIndex} onClick={() => this.takeTurn('fold')}>Fold</button>
 
           </div>
