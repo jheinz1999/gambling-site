@@ -1,5 +1,6 @@
 const Room = require('./Room');
 const Deck = require('../cards/Deck');
+const solver = require('../games/poker/solver');
 const { getIO } = require('../common/globals');
 
 class PokerRoom extends Room {
@@ -18,6 +19,7 @@ class PokerRoom extends Room {
         newThis.turn = 0;
         newThis.stage = 0;
         newThis.bets = [];
+        newThis.everyoneBet = false;
 
       })
 
@@ -78,6 +80,7 @@ class PokerRoom extends Room {
   nextStage() {
 
     this.stage++;
+    this.everyoneBet = false;
 
     this.pot += this.bets.reduce((acc, val) => acc + val);
     this.bets = this.users.map(() => 0);
@@ -91,11 +94,65 @@ class PokerRoom extends Room {
 
       this.cards = this.deck.draw(3).concat([null, null]);
 
-      console.log('cards', this.cards);
+      this.emit('newCards', this.cards);
+
+    }
+
+    if (this.stage === 2) {
+
+      this.cards[3] = this.deck.draw(1)[0];
 
       this.emit('newCards', this.cards);
 
     }
+
+    if (this.stage === 3) {
+
+      this.cards[4] = this.deck.draw(1)[0];
+
+      this.emit('newCards', this.cards);
+
+    }
+
+    if (this.stage === 4) {
+
+      this.determineWinner();
+
+    }
+
+  }
+
+  determineWinner() {
+
+    const finalHands = this.hands.map(hand => {
+
+      return solver(hand.concat(this.cards));
+
+    });
+
+    let winningHand = finalHands[0];
+    let winningIndex = 0;
+
+    for (let i = 1; i < finalHands.length; i++) {
+
+      if (finalHands[i].rank > winningHand.rank) {
+
+        winningHand = finalHands[i];
+        winningIndex = i;
+
+      }
+
+      if (finalHands[i].rank === winningHand.rank && finalHands.value > winningHand.value) {
+
+        winningHand = finalHands[i];
+        winningIndex = i;
+
+      }
+
+    }
+
+    console.log('the winner is number', winningIndex);
+    console.log('they have', winningHand);
 
   }
 
@@ -106,33 +163,44 @@ class PokerRoom extends Room {
     if (this.turn > this.users.length - 1) {
 
       this.turn = 0;
+      this.everyoneBet = true;
 
       if (this.bets[0] === this.bets[this.bets.length - 1])
         this.nextStage();
 
     }
 
-    const bet = this.bets[0];
-    let even = true;
+    if (this.everyoneBet) {
 
-    for (let i = 1; i < this.bets.length; i++) {
+      const bet = this.bets[0];
+      let even = true;
 
-      if (bet !== this.bets[i]) {
+      for (let i = 1; i < this.bets.length; i++) {
 
-        even = false;
-        break;
+        if (bet !== this.bets[i]) {
+
+          even = false;
+          break;
+
+        }
+
+      }
+
+      if (!even)
+        this.emit('newTurn', this.turn);
+
+      else {
+
+        this.emit('newTurn', 0);
+        this.nextStage();
 
       }
 
     }
 
-    if (!even)
-      this.emit('newTurn', this.turn);
-
     else {
 
-      this.emit('newTurn', 0);
-      this.nextStage();
+      this.emit('newTurn', this.turn);
 
     }
 
